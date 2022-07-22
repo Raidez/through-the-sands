@@ -6,7 +6,7 @@ export(int) var ACCELERATION = 200
 export(int) var GROUND_FRICTION = 200
 
 #Variables de vitesse verticale du personnage joueur, modifiable dans l'éditeur
-export(int) var JUMP_FORCE = 0
+export(int) var JUMP_FORCE = 50
 export(int) var MAX_FALL_SPEED = 200
 export(int) var FAST_FALL_SPEED = 150
 export(int) var GRAVITY = 5
@@ -37,7 +37,7 @@ func _physics_process(delta):
 	
 	make_player_jump()
 	
-	move_and_slide(player_velocity * delta)
+	move_and_slide(player_velocity)
 	pass
 
 func get_player_input(input):
@@ -54,8 +54,8 @@ func apply_gravity():
 func apply_friction():
 	player_velocity.x = move_toward(player_velocity.x, 0, GROUND_FRICTION)
 
-func apply_acceleration(input_x):
-	player_velocity.x = move_toward(player_velocity.x, MAX_SPEED * player_direction.x, ACCELERATION)
+func apply_acceleration(direction):
+	player_velocity.x = move_toward(player_velocity.x, MAX_SPEED * direction.x, ACCELERATION)
 
 func make_player_move_horizontal(direction):
 	#When pressing nothing, grind to a halt
@@ -64,7 +64,7 @@ func make_player_move_horizontal(direction):
 		player_animated_sprite.animation = "Idle"
 	#When pressing something, accelerate in the input direction
 	else:
-		apply_acceleration(direction)
+		apply_acceleration(player_direction)
 		player_animated_sprite.animation = "Run"
 		
 		#Face the direction of movement. Horizontal symmetry
