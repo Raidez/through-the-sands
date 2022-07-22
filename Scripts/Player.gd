@@ -11,12 +11,20 @@ export(int) var MAX_FALL_SPEED = 500
 export(int) var FAST_FALL_SPEED = 200
 export(int) var GRAVITY = 5
 
+export(int) var WALL_DETECTION_DISTANCE = 15
+
 #Variable pour stocker l'animation du joueur
 onready var player_animated_sprite = $AnimatedSprite
 
 #Variable pour stocker les minuteurs joueur
 onready var coyote_time = $CoyoteTimeTimer
 onready var jump_buffer = $JumpBufferTimer
+
+onready var wall_raycast = $WallRaycast as RayCast2D
+
+#Variables pour stocker l'état du joueur
+enum STATE { IDLE, RUN, JUMP, PUSH }
+var state = STATE.IDLE
 
 #Variable pour stocker les bouttons du joueur, facile à changer pour plus tard
 var input_move_right = "move_right"
@@ -28,6 +36,34 @@ var player_direction = Vector2.ZERO
 var player_velocity = Vector2.ZERO
 var fast_fall = false
 
+func _ready():
+	wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
+
+func _process(delta):
+	_state()
+	_animate()
+
+func _state():
+	if wall_raycast.is_colliding() and player_direction.x != 0:
+		state = STATE.PUSH
+	elif not is_on_floor():
+		state = STATE.JUMP
+	elif is_zero_approx(player_velocity.x):
+		state = STATE.IDLE
+	else:
+		state = STATE.RUN
+
+func _animate():
+	var animation_state = STATE.keys()[state].to_lower()
+	player_animated_sprite.animation = animation_state
+	
+	#Face the direction of movement. Horizontal symmetry
+	if player_velocity.x > 0:
+		player_animated_sprite.flip_h = true
+		wall_raycast.cast_to.x = WALL_DETECTION_DISTANCE
+	elif player_velocity.x < 0:
+		player_animated_sprite.flip_h = false
+		wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
 
 func _physics_process(delta):
 	get_player_direction()
@@ -55,18 +91,15 @@ func make_player_move_horizontal(direction):
 	#When pressing nothing, grind to a halt
 	if direction == 0:
 		apply_friction()
-		player_animated_sprite.animation = "Idle"
 	#When pressing something, accelerate in the input direction
 	else:
 		apply_acceleration(direction)
-		player_animated_sprite.animation = "Run"
 		
-		#Face the direction of movement. Horizontal symmetry
-		if direction > 0:
-			player_animated_sprite.flip_h = true
-		else:
-			player_animated_sprite.flip_h = false
-			
+		if state == STATE.PUSH:
+			var collider = wall_raycast.get_collider()
+			if collider and collider.is_in_group("pushable"):
+				collider.slide(player_velocity)
+
 func make_player_move_vertical():
 	
 	if is_on_floor():
@@ -74,7 +107,6 @@ func make_player_move_vertical():
 			fast_fall = false
 			player_velocity.y = JUMP_FORCE
 	else:
-		player_animated_sprite.animation = "Jump"
 		if Input.is_action_just_released(input_jump) and player_velocity.y < JUMP_FORCE / 2:
 			player_velocity.y = JUMP_FORCE / 2
 		
@@ -91,5 +123,4 @@ func has_player_landed():
 	var just_landed = is_on_floor() and was_in_air
 	
 	if just_landed:
-		player_animated_sprite.animation = "Run"
 		player_animated_sprite.frame = 1
