@@ -11,12 +11,16 @@ export(int) var MAX_FALL_SPEED = 200
 export(int) var FAST_FALL_SPEED = 150
 export(int) var GRAVITY = 5
 
+export(int) var WALL_DETECTION_DISTANCE = 10
+
 #Variable pour stocker l'animation du joueur
 onready var player_animated_sprite = $AnimatedSprite
 
 #Variable pour stocker les minuteurs joueur
 onready var coyote_time = $CoyoteTimeTimer
 onready var jump_buffer = $JumpBufferTimer
+
+onready var wall_raycast = $WallRaycast as RayCast2D
 
 #Variable pour stocker les bouttons du joueur, facile à changer pour plus tard
 var input_move_right = "move_right"
@@ -28,6 +32,26 @@ var player_direction = Vector2.ZERO
 var player_velocity = Vector2.ZERO
 var fast_fall = false
 
+func _ready():
+	wall_raycast.cast_to.x = WALL_DETECTION_DISTANCE
+
+func _process(delta):
+	_animate()
+
+func _animate():
+	print(player_animated_sprite.animation)
+#	if is_zero_approx(player_velocity.x):
+#		player_animated_sprite.animation = "Idle"
+#	else:
+#		player_animated_sprite.animation = "Run"
+	
+	#Face the direction of movement. Horizontal symmetry
+	if player_velocity.x > 0:
+		player_animated_sprite.flip_h = true
+		wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
+	elif player_velocity.x < 0:
+		player_animated_sprite.flip_h = false
+		wall_raycast.cast_to.x = WALL_DETECTION_DISTANCE
 
 func _physics_process(delta):
 	get_player_direction()
@@ -38,7 +62,6 @@ func _physics_process(delta):
 	make_player_jump()
 	
 	move_and_slide(player_velocity)
-	pass
 
 func get_player_input(input):
 	pass
@@ -55,23 +78,15 @@ func apply_friction():
 	player_velocity.x = move_toward(player_velocity.x, 0, GROUND_FRICTION)
 
 func apply_acceleration(direction):
-	player_velocity.x = move_toward(player_velocity.x, MAX_SPEED * direction.x, ACCELERATION)
+	player_velocity.x = move_toward(player_velocity.x, MAX_SPEED * direction, ACCELERATION)
 
 func make_player_move_horizontal(direction):
 	#When pressing nothing, grind to a halt
 	if direction == 0:
 		apply_friction()
-		player_animated_sprite.animation = "Idle"
 	#When pressing something, accelerate in the input direction
 	else:
 		apply_acceleration(direction)
-		player_animated_sprite.animation = "Run"
-		
-		#Face the direction of movement. Horizontal symmetry
-		if direction > 0:
-			player_animated_sprite.flip_h = true
-		else:
-			player_animated_sprite.flip_h = false
 			
 func make_player_jump():
 	
