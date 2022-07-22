@@ -1,16 +1,24 @@
 extends KinematicBody2D
 
+#Variable de vitesse horizontale du personnage joueur, modifiable dans l'éditeur
+export(int) var GROUND_FRICTION = 200
+
+#Variables de vitesse verticale du personnage joueur, modifiable dans l'éditeur
 export(int) var GRAVITY = 5
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+export(int) var MAX_FALL_SPEED = 200
 
+var ship_velocity = Vector2.ZERO
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+func _physics_process(delta):
+	if not is_on_floor():
+		apply_gravity()
+	
+	ship_velocity = move_and_slide(ship_velocity, Vector2.UP)
+	print(ship_velocity)
 
+func apply_gravity():
+	ship_velocity.y += GRAVITY;
+	ship_velocity.y = min(ship_velocity.y, MAX_FALL_SPEED)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func slide(vector: Vector2):
+	ship_velocity.x = vector.x
