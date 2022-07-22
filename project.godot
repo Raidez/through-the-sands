@@ -8,11 +8,67 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "PanelContainer",
+"class": "LogContainer",
+"language": "GDScript",
+"path": "res://addons/hyperlog/log_container.gd"
+}, {
+"base": "Control",
+"class": "Tracker",
+"language": "GDScript",
+"path": "res://addons/hyperlog/trackers/tracker.gd"
+}, {
+"base": "Tracker",
+"class": "TrackerAngle",
+"language": "GDScript",
+"path": "res://addons/hyperlog/trackers/tracker_angle.gd"
+}, {
+"base": "Tracker",
+"class": "TrackerBar",
+"language": "GDScript",
+"path": "res://addons/hyperlog/trackers/tracker_bar.gd"
+}, {
+"base": "Tracker",
+"class": "TrackerColor",
+"language": "GDScript",
+"path": "res://addons/hyperlog/trackers/tracker_color.gd"
+}, {
+"base": "Tracker",
+"class": "TrackerGraph",
+"language": "GDScript",
+"path": "res://addons/hyperlog/trackers/tracker_graph.gd"
+}, {
+"base": "Tracker",
+"class": "TrackerText",
+"language": "GDScript",
+"path": "res://addons/hyperlog/trackers/tracker_text.gd"
+}, {
+"base": "Resource",
+"class": "ValueTracker",
+"language": "GDScript",
+"path": "res://addons/hyperlog/value_tracker.gd"
+} ]
+_global_script_class_icons={
+"LogContainer": "",
+"Tracker": "",
+"TrackerAngle": "",
+"TrackerBar": "",
+"TrackerColor": "",
+"TrackerGraph": "",
+"TrackerText": "",
+"ValueTracker": ""
+}
+
 [application]
 
 config/name="Through the Sands"
 run/main_scene="res://Scenes/World.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+HyperLog="*res://addons/hyperlog/hyperlog.tscn"
 
 [display]
 
@@ -21,6 +77,10 @@ window/size/height=360
 window/size/test_width=1280
 window/size/test_height=720
 window/stretch/mode="2d"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/hyperlog/plugin.cfg" )
 
 [importer_defaults]
 
