@@ -64,7 +64,7 @@ func make_player_move_horizontal(direction):
 		player_animated_sprite.animation = "Idle"
 	#When pressing something, accelerate in the input direction
 	else:
-		apply_acceleration(player_direction)
+		apply_acceleration(direction)
 		player_animated_sprite.animation = "Run"
 		
 		#Face the direction of movement. Horizontal symmetry
