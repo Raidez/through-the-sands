@@ -21,6 +21,7 @@ onready var coyote_time = $CoyoteTimeTimer
 onready var jump_buffer = $JumpBufferTimer
 
 onready var wall_raycast = $WallRaycast as RayCast2D
+onready var ground_raycast = $GroundRaycast as RayCast2D
 
 #Variables pour stocker l'état du joueur
 enum STATE { IDLE, RUN, JUMP, PUSH }
@@ -95,9 +96,11 @@ func make_player_move_horizontal(direction):
 	else:
 		apply_acceleration(direction)
 		
+		# on pousse l'objet si on n'est pas sur l'objet lui-même
 		if state == STATE.PUSH:
+			var ground = ground_raycast.get_collider()
 			var collider = wall_raycast.get_collider()
-			if collider and collider.is_in_group("pushable"):
+			if collider and collider.is_in_group("pushable") and ground and ground != collider:
 				collider.slide(player_velocity)
 
 func make_player_move_vertical():
