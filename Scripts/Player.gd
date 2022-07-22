@@ -6,9 +6,9 @@ export(int) var ACCELERATION = 200
 export(int) var GROUND_FRICTION = 200
 
 #Variables de vitesse verticale du personnage joueur, modifiable dans l'éditeur
-export(int) var JUMP_FORCE = 50
-export(int) var MAX_FALL_SPEED = 200
-export(int) var FAST_FALL_SPEED = 150
+export(int) var JUMP_FORCE = -150
+export(int) var MAX_FALL_SPEED = 500
+export(int) var FAST_FALL_SPEED = 200
 export(int) var GRAVITY = 5
 
 #Variable pour stocker l'animation du joueur
@@ -31,17 +31,11 @@ var fast_fall = false
 
 func _physics_process(delta):
 	get_player_direction()
-	
 	make_player_move_horizontal(player_direction.x)
 	apply_gravity()
+	make_player_move_vertical()
 	
-	make_player_jump()
-	
-	move_and_slide(player_velocity)
-	pass
-
-func get_player_input(input):
-	pass
+	player_velocity = move_and_slide(player_velocity, Vector2.UP)
 
 
 func get_player_direction():
@@ -55,7 +49,7 @@ func apply_friction():
 	player_velocity.x = move_toward(player_velocity.x, 0, GROUND_FRICTION)
 
 func apply_acceleration(direction):
-	player_velocity.x = move_toward(player_velocity.x, MAX_SPEED * direction.x, ACCELERATION)
+	player_velocity.x = move_toward(player_velocity.x, MAX_SPEED * direction, ACCELERATION)
 
 func make_player_move_horizontal(direction):
 	#When pressing nothing, grind to a halt
@@ -73,9 +67,9 @@ func make_player_move_horizontal(direction):
 		else:
 			player_animated_sprite.flip_h = false
 			
-func make_player_jump():
+func make_player_move_vertical():
 	
-	if is_on_floor() or coyote_time.time_left > 0:
+	if is_on_floor():
 		if Input.is_action_just_pressed(input_jump):
 			fast_fall = false
 			player_velocity.y = JUMP_FORCE
@@ -93,7 +87,9 @@ func make_player_jump():
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
 	var was_in_air = not is_on_floor()
+	
 	var just_landed = is_on_floor() and was_in_air
+	
 	if just_landed:
 		player_animated_sprite.animation = "Run"
 		player_animated_sprite.frame = 1
