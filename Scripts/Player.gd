@@ -33,6 +33,7 @@ func _physics_process(delta):
 	get_player_direction()
 	
 	make_player_move_horizontal(player_direction.x)
+	apply_gravity()
 	
 	make_player_jump()
 	
