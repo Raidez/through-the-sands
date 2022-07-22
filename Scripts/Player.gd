@@ -1,6 +1,8 @@
 extends KinematicBody2D
 
 #Variable de vitesse horizontale du personnage joueur, modifiable dans l'éditeur
+export(int) var PUSH_SPEED = 100
+export(int) var PULL_SPEED = 20
 export(int) var MAX_SPEED = 200
 export(int) var ACCELERATION = 200
 export(int) var GROUND_FRICTION = 200
@@ -12,6 +14,7 @@ export(int) var FAST_FALL_SPEED = 200
 export(int) var GRAVITY = 5
 
 export(int) var WALL_DETECTION_DISTANCE = 15
+export(int) var PULL_PINJOINT = 12
 
 #Variable pour stocker l'animation du joueur
 onready var player_animated_sprite = $AnimatedSprite
@@ -24,7 +27,7 @@ onready var wall_raycast = $WallRaycast as RayCast2D
 onready var ground_raycast = $GroundRaycast as RayCast2D
 
 #Variables pour stocker l'état du joueur
-enum STATE { IDLE, RUN, JUMP, PUSH }
+enum STATE { IDLE, RUN, JUMP, PUSH, PULL }
 var state = STATE.IDLE
 
 #Variable pour stocker les bouttons du joueur, facile à changer pour plus tard
@@ -32,20 +35,26 @@ var input_move_right = "move_right"
 var input_move_left = "move_left"
 var input_jump = "move_jump"
 var input_move_down = "move_down"
+var input_pull_object = "pull_object"
 
 var player_direction = Vector2.ZERO
 var player_velocity = Vector2.ZERO
 var fast_fall = false
+var pull_object = null
 
 func _ready():
 	wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
 
 func _process(delta):
+	make_player_pull_object()
+	
 	_state()
 	_animate()
 
 func _state():
-	if wall_raycast.is_colliding() and player_direction.x != 0:
+	if pull_object:
+		state = STATE.PULL
+	elif wall_raycast.is_colliding() and player_direction.x != 0:
 		state = STATE.PUSH
 	elif not is_on_floor():
 		state = STATE.JUMP
@@ -86,7 +95,13 @@ func apply_friction():
 	player_velocity.x = move_toward(player_velocity.x, 0, GROUND_FRICTION)
 
 func apply_acceleration(direction):
-	player_velocity.x = move_toward(player_velocity.x, MAX_SPEED * direction, ACCELERATION)
+	var speed = MAX_SPEED
+	if state == STATE.PUSH:
+		speed = PUSH_SPEED
+	elif state == STATE.PULL:
+		speed = PULL_SPEED
+	
+	player_velocity.x = move_toward(player_velocity.x, speed * direction, ACCELERATION)
 
 func make_player_move_horizontal(direction):
 	#When pressing nothing, grind to a halt
@@ -97,15 +112,17 @@ func make_player_move_horizontal(direction):
 		apply_acceleration(direction)
 		
 		# on pousse l'objet si on n'est pas sur l'objet lui-même
+		var ground = ground_raycast.get_collider()
 		if state == STATE.PUSH:
-			var ground = ground_raycast.get_collider()
-			var collider = wall_raycast.get_collider()
-			if collider and collider.is_in_group("pushable") and ground and ground != collider:
-				collider.slide(player_velocity)
+			var push_object = wall_raycast.get_collider()
+			if push_object and push_object.is_in_group("pushable") and not is_on_something():
+				push_object.slide(player_velocity)
+		elif state == STATE.PULL:
+			pull_object.slide(player_velocity)
 
 func make_player_move_vertical():
 	
-	if is_on_floor():
+	if is_on_floor() and state != STATE.PULL:
 		if Input.is_action_just_pressed(input_jump):
 			fast_fall = false
 			player_velocity.y = JUMP_FORCE
@@ -118,7 +135,21 @@ func make_player_move_vertical():
 			fast_fall = true
 			
 	has_player_landed()
+
+func is_on_something():
+	var ground = ground_raycast.get_collider()
+	return ground and (ground.is_in_group("pushable") or ground.is_in_group("pushable"))
+
+func make_player_pull_object():
+	# action pour permettre de tirer un objet
+	if Input.is_action_just_pressed(input_pull_object) and pull_object:
+		pull_object = null
 	
+	elif Input.is_action_just_pressed(input_pull_object) and not is_on_something():
+		var collider = wall_raycast.get_collider()
+		if wall_raycast.is_colliding() and collider.is_in_group("pullable"):
+			pull_object = wall_raycast.get_collider()
+
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
 	var was_in_air = not is_on_floor()
