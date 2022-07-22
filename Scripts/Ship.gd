@@ -13,8 +13,11 @@ func _physics_process(delta):
 	if not is_on_floor():
 		apply_gravity()
 	
+	apply_friction(delta)
 	ship_velocity = move_and_slide(ship_velocity, Vector2.UP)
-	print(ship_velocity)
+
+func apply_friction(delta):
+	ship_velocity.x = move_toward(ship_velocity.x, 0, GROUND_FRICTION * delta)
 
 func apply_gravity():
 	ship_velocity.y += GRAVITY;
@@ -22,3 +25,4 @@ func apply_gravity():
 
 func slide(vector: Vector2):
 	ship_velocity.x = vector.x
+
