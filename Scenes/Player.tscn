@@ -47,7 +47,7 @@ script = ExtResource( 2 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -11 )
 frames = SubResource( 5 )
-animation = "Idle"
+animation = "Jump"
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -55,15 +55,8 @@ position = Vector2( 0, -9 )
 shape = SubResource( 6 )
 
 [node name="CoyoteTimeTimer" type="Timer" parent="."]
-wait_time = 0.1
 one_shot = true
 
 [node name="JumpBufferTimer" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true
-
-[node name="WallRaycast" type="RayCast2D" parent="."]
-position = Vector2( 0, -9 )
-scale = Vector2( -1, 1 )
-enabled = true
-cast_to = Vector2( 0, 0 )

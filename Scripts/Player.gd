@@ -6,12 +6,10 @@ export(int) var ACCELERATION = 200
 export(int) var GROUND_FRICTION = 200
 
 #Variables de vitesse verticale du personnage joueur, modifiable dans l'éditeur
-export(int) var JUMP_FORCE = 50
-export(int) var MAX_FALL_SPEED = 200
-export(int) var FAST_FALL_SPEED = 150
+export(int) var JUMP_FORCE = -150
+export(int) var MAX_FALL_SPEED = 500
+export(int) var FAST_FALL_SPEED = 200
 export(int) var GRAVITY = 5
-
-export(int) var WALL_DETECTION_DISTANCE = 10
 
 #Variable pour stocker l'animation du joueur
 onready var player_animated_sprite = $AnimatedSprite
@@ -19,8 +17,6 @@ onready var player_animated_sprite = $AnimatedSprite
 #Variable pour stocker les minuteurs joueur
 onready var coyote_time = $CoyoteTimeTimer
 onready var jump_buffer = $JumpBufferTimer
-
-onready var wall_raycast = $WallRaycast as RayCast2D
 
 #Variable pour stocker les bouttons du joueur, facile à changer pour plus tard
 var input_move_right = "move_right"
@@ -32,39 +28,14 @@ var player_direction = Vector2.ZERO
 var player_velocity = Vector2.ZERO
 var fast_fall = false
 
-func _ready():
-	wall_raycast.cast_to.x = WALL_DETECTION_DISTANCE
-
-func _process(delta):
-	_animate()
-
-func _animate():
-	print(player_animated_sprite.animation)
-#	if is_zero_approx(player_velocity.x):
-#		player_animated_sprite.animation = "Idle"
-#	else:
-#		player_animated_sprite.animation = "Run"
-	
-	#Face the direction of movement. Horizontal symmetry
-	if player_velocity.x > 0:
-		player_animated_sprite.flip_h = true
-		wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
-	elif player_velocity.x < 0:
-		player_animated_sprite.flip_h = false
-		wall_raycast.cast_to.x = WALL_DETECTION_DISTANCE
 
 func _physics_process(delta):
 	get_player_direction()
-	
 	make_player_move_horizontal(player_direction.x)
 	apply_gravity()
+	make_player_move_vertical()
 	
-	make_player_jump()
-	
-	move_and_slide(player_velocity)
-
-func get_player_input(input):
-	pass
+	player_velocity = move_and_slide(player_velocity, Vector2.UP)
 
 
 func get_player_direction():
@@ -84,13 +55,21 @@ func make_player_move_horizontal(direction):
 	#When pressing nothing, grind to a halt
 	if direction == 0:
 		apply_friction()
+		player_animated_sprite.animation = "Idle"
 	#When pressing something, accelerate in the input direction
 	else:
 		apply_acceleration(direction)
+		player_animated_sprite.animation = "Run"
+		
+		#Face the direction of movement. Horizontal symmetry
+		if direction > 0:
+			player_animated_sprite.flip_h = true
+		else:
+			player_animated_sprite.flip_h = false
 			
-func make_player_jump():
+func make_player_move_vertical():
 	
-	if is_on_floor() or coyote_time.time_left > 0:
+	if is_on_floor():
 		if Input.is_action_just_pressed(input_jump):
 			fast_fall = false
 			player_velocity.y = JUMP_FORCE
@@ -108,7 +87,9 @@ func make_player_jump():
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
 	var was_in_air = not is_on_floor()
+	
 	var just_landed = is_on_floor() and was_in_air
+	
 	if just_landed:
 		player_animated_sprite.animation = "Run"
 		player_animated_sprite.frame = 1
