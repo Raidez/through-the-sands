@@ -10,6 +10,8 @@ script = ExtResource( 4 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 393, 61 )
+PUSH_SPEED = 20
+PULL_SPEED = 25
 
 [node name="TileMap" parent="." instance=ExtResource( 3 )]
 collision_mask = 7

@@ -67,13 +67,7 @@ func _animate():
 	var animation_state = STATE.keys()[state].to_lower()
 	player_animated_sprite.animation = animation_state
 	
-	#Face the direction of movement. Horizontal symmetry
-	if player_velocity.x > 0:
-		player_animated_sprite.flip_h = true
-		wall_raycast.cast_to.x = WALL_DETECTION_DISTANCE
-	elif player_velocity.x < 0:
-		player_animated_sprite.flip_h = false
-		wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
+	player_facing_direction()
 
 func _physics_process(delta):
 	get_player_direction()
@@ -157,3 +151,12 @@ func has_player_landed():
 	
 	if just_landed:
 		player_animated_sprite.frame = 1
+
+func player_facing_direction():
+	#Face the direction of movement. Horizontal symmetry
+	if player_velocity.x > 0:
+		player_animated_sprite.flip_h = true
+		wall_raycast.cast_to.x = WALL_DETECTION_DISTANCE
+	elif player_velocity.x < 0:
+		player_animated_sprite.flip_h = false
+		wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
