@@ -7,6 +7,8 @@ export(int) var MAX_SPEED = 200
 export(int) var ACCELERATION = 200
 export(int) var GROUND_FRICTION = 200
 
+export(int) var MAX_JUMP_NUMBER = 2
+
 #Variables de vitesse verticale du personnage joueur, modifiable dans l'éditeur
 export(int) var JUMP_FORCE = -150
 export(int) var MAX_FALL_SPEED = 500
@@ -39,6 +41,7 @@ var input_pull_object = "pull_object"
 
 var player_direction = Vector2.ZERO
 var player_velocity = Vector2.ZERO
+var jump_count = 0
 var fast_fall = false
 var pull_object = null
 
@@ -72,11 +75,7 @@ func _animate():
 func _physics_process(delta):
 	get_player_direction()
 	make_player_move_horizontal(player_direction.x)
-#	apply_gravity()
 	make_player_move_vertical()
-	#Si dans coyote_time pas de gravité, peut sauter
-	#Faire le JumpBuffer
-	
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
 
@@ -123,28 +122,34 @@ func make_player_move_vertical():
 		jump_buffer.start()
 	
 	if is_on_floor() and state != STATE.PULL:
+		jump_count = 0
 		coyote_time.start()
 		if !jump_buffer.is_stopped():
 			make_player_jump()
 	else:
-		if Input.is_action_just_released(input_jump) and player_velocity.y < JUMP_FORCE / 2:
-			player_velocity.y = JUMP_FORCE / 2
-		
-		if player_velocity.y > 0 and !fast_fall:
-			player_velocity.y += FAST_FALL_SPEED
-			fast_fall = true
-		
 		#Donne au joueur la possibilité de sauter un court instant après avoir quitté une plateforme
 		#avant que la gravité ne prenne effet
 		if coyote_time.is_stopped():
 			apply_gravity()
+			#Si il reste des sauts disponible dans le compteur de saut, permettre au joueur de sauter
+			if !jump_buffer.is_stopped() and jump_count < MAX_JUMP_NUMBER:
+				make_player_jump()
 		elif !jump_buffer.is_stopped():
 			make_player_jump()
+		
+		if Input.is_action_just_released(input_jump) and player_velocity.y < JUMP_FORCE / 2:
+			player_velocity.y = JUMP_FORCE / 2
+		
+		if player_velocity.y > 0 and !fast_fall:
+			player_velocity.y = FAST_FALL_SPEED
+			fast_fall = true
+		
 	
 	has_player_landed()
 
 func make_player_jump():
 	
+	jump_count += 1
 	fast_fall = false
 	player_velocity.y = JUMP_FORCE
 	jump_buffer.stop()
