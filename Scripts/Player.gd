@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+class_name Player
+
 #Variable de vitesse horizontale du personnage joueur, modifiable dans l'éditeur
 export(int) var PUSH_SPEED = 100
 export(int) var PULL_SPEED = 20
@@ -27,7 +29,7 @@ onready var wall_raycast = $WallRaycast as RayCast2D
 onready var ground_raycast = $GroundRaycast as RayCast2D
 
 #Variables pour stocker l'état du joueur
-enum STATE { IDLE, RUN, JUMP, PUSH, PULL }
+enum STATE { IDLE, RUN, JUMP, PUSH, PULL, CLIMB_UP, CLIMB_DOWN, FREEZE }
 var state = STATE.IDLE
 
 #Variable pour stocker les bouttons du joueur, facile à changer pour plus tard
@@ -35,24 +37,34 @@ var input_move_right = "move_right"
 var input_move_left = "move_left"
 var input_jump = "move_jump"
 var input_move_down = "move_down"
+var input_move_up = "move_up"
 var input_pull_object = "pull_object"
 
 var player_direction = Vector2.ZERO
 var player_velocity = Vector2.ZERO
 var fast_fall = false
 var pull_object = null
+var ladder_object = null
 
 func _ready():
 	wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
 
-func _process(delta):
+func _process(_delta):
+	if state == STATE.FREEZE:
+		return
+	
 	make_player_pull_object()
 	
 	_state()
 	_animate()
 
 func _state():
-	if pull_object:
+	if is_on_ladder():
+		if player_direction.y > 0:
+			state = STATE.CLIMB_DOWN
+		elif player_direction.y < 0:
+			state = STATE.CLIMB_UP
+	elif pull_object:
 		state = STATE.PULL
 	elif wall_raycast.is_colliding() and player_direction.x != 0:
 		state = STATE.PUSH
@@ -70,20 +82,28 @@ func _animate():
 	player_facing_direction()
 
 func _physics_process(delta):
+	if state == STATE.FREEZE:
+		return
+	
 	get_player_direction()
 	make_player_move_horizontal(player_direction.x)
 	apply_gravity()
 	make_player_move_vertical()
+	make_player_climb_ladder(delta)
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
 
 
 func get_player_direction():
 	player_direction.x = Input.get_action_strength(input_move_right) - Input.get_action_strength(input_move_left)
+	player_direction.y = Input.get_action_strength(input_move_down) - Input.get_action_strength(input_move_up)
 
 func apply_gravity():
-	player_velocity.y += GRAVITY;
-	player_velocity.y = min(player_velocity.y, MAX_FALL_SPEED)
+	if is_on_ladder():
+		player_velocity.y = 0
+	else:
+		player_velocity.y += GRAVITY;
+		player_velocity.y = min(player_velocity.y, MAX_FALL_SPEED)
 
 func apply_friction():
 	player_velocity.x = move_toward(player_velocity.x, 0, GROUND_FRICTION)
@@ -103,6 +123,9 @@ func make_player_move_horizontal(direction):
 		apply_friction()
 	#When pressing something, accelerate in the input direction
 	else:
+		if ladder_object:
+			ladder_object.leave()
+		
 		apply_acceleration(direction)
 		
 		# on pousse l'objet si on n'est pas sur l'objet lui-même
@@ -114,7 +137,6 @@ func make_player_move_horizontal(direction):
 			pull_object.slide(player_velocity)
 
 func make_player_move_vertical():
-	
 	if is_on_floor() and state != STATE.PULL:
 		if Input.is_action_just_pressed(input_jump):
 			fast_fall = false
@@ -143,6 +165,13 @@ func make_player_pull_object():
 		if wall_raycast.is_colliding() and collider.is_in_group("pullable"):
 			pull_object = wall_raycast.get_collider()
 
+func make_player_climb_ladder(delta):
+	if is_on_ladder():
+		if Input.is_action_pressed("move_up"):
+			ladder_object.climb(self, delta)
+		elif Input.is_action_pressed("move_down"):
+			ladder_object.fall(self, delta)
+
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
 	var was_in_air = not is_on_floor()
@@ -160,3 +189,15 @@ func player_facing_direction():
 	elif player_velocity.x < 0:
 		player_animated_sprite.flip_h = false
 		wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
+
+func is_on_ladder():
+	return ladder_object != null
+
+func _on_DetectLadder_area_entered(area):
+	if area is Ladder:
+		ladder_object = area
+		ladder_object.find_closet_point_for_player(self)
+
+func _on_DetectLadder_area_exited(_area):
+	ladder_object.leave()
+	ladder_object = null
