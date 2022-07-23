@@ -134,7 +134,7 @@ func make_player_move_vertical():
 			player_velocity.y += FAST_FALL_SPEED
 			fast_fall = true
 		
-		#Donne au joueur la possibilité de sauté un cour instant après avoir quitté une plateforme
+		#Donne au joueur la possibilité de sauter un court instant après avoir quitté une plateforme
 		#avant que la gravité ne prenne effet
 		if coyote_time.is_stopped():
 			apply_gravity()
