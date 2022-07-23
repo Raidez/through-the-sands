@@ -72,11 +72,13 @@ func _animate():
 func _physics_process(delta):
 	get_player_direction()
 	make_player_move_horizontal(player_direction.x)
-	apply_gravity()
+#	apply_gravity()
 	make_player_move_vertical()
+	#Si dans coyote_time pas de gravité, peut sauter
+	#Faire le JumpBuffer
+	
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
-
 
 func get_player_direction():
 	player_direction.x = Input.get_action_strength(input_move_right) - Input.get_action_strength(input_move_left)
@@ -114,11 +116,16 @@ func make_player_move_horizontal(direction):
 			pull_object.slide(player_velocity)
 
 func make_player_move_vertical():
+	#Démarre le minuteur pour le saut, cette étape supplémentaire permet d'éviter l'impression que 
+	#le jeu "mange" les inputs du joueur. Le personnage sautera même si la touche saut est utilisé
+	#un peu avant d'avoir touché le sol.
+	if Input.is_action_just_pressed(input_jump):
+		jump_buffer.start()
 	
 	if is_on_floor() and state != STATE.PULL:
-		if Input.is_action_just_pressed(input_jump):
-			fast_fall = false
-			player_velocity.y = JUMP_FORCE
+		coyote_time.start()
+		if !jump_buffer.is_stopped():
+			make_player_jump()
 	else:
 		if Input.is_action_just_released(input_jump) and player_velocity.y < JUMP_FORCE / 2:
 			player_velocity.y = JUMP_FORCE / 2
@@ -126,8 +133,22 @@ func make_player_move_vertical():
 		if player_velocity.y > 0 and !fast_fall:
 			player_velocity.y += FAST_FALL_SPEED
 			fast_fall = true
-			
+		
+		#Donne au joueur la possibilité de sauté un cour instant après avoir quitté une plateforme
+		#avant que la gravité ne prenne effet
+		if coyote_time.is_stopped():
+			apply_gravity()
+		elif !jump_buffer.is_stopped():
+			make_player_jump()
+	
 	has_player_landed()
+
+func make_player_jump():
+	
+	fast_fall = false
+	player_velocity.y = JUMP_FORCE
+	jump_buffer.stop()
+	coyote_time.stop()
 
 func is_on_something():
 	var ground = ground_raycast.get_collider()
