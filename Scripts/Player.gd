@@ -31,6 +31,7 @@ onready var jump_buffer = $JumpBufferTimer
 onready var wall_raycast = $WallRaycast as RayCast2D
 onready var ground_raycast = $GroundRaycast as RayCast2D
 
+
 #Variables pour stocker l'état du joueur
 enum STATE { IDLE, RUN, JUMP, PUSH, PULL, CLIMB_UP, CLIMB_DOWN }
 var state = STATE.IDLE
@@ -47,6 +48,7 @@ var player_direction = Vector2.ZERO
 var player_velocity = Vector2.ZERO
 var fast_fall = false
 var pull_object = null
+var nearest_ladder = null
 var ladder_object = null
 
 ####################################################################################################
@@ -101,7 +103,7 @@ func get_player_direction():
 
 func apply_gravity():
 	#On annule la gravité sur le joueur est sur une échelle (s'il grimpe)
-	if is_on_ladder() and (state == STATE.CLIMB_UP or state == STATE.CLIMB_DOWN):
+	if is_on_ladder():
 		player_velocity.y = 0
 	else:
 		player_velocity.y += GRAVITY;
@@ -139,10 +141,8 @@ func make_player_move_horizontal(direction):
 func make_player_move_vertical():
 	if (is_on_floor() and state != STATE.PULL) or (is_on_ladder() and (state == STATE.CLIMB_UP or state == STATE.CLIMB_DOWN)):
 		if Input.is_action_just_pressed(input_jump):
-			if ladder_object:
-				ladder_object.leave()
-				ladder_object = null
-				player_velocity.y = CLIMB_FALL_SPEED
+			if is_on_ladder():
+				leave_ladder()
 			fast_fall = false
 			player_velocity.y = JUMP_FORCE
 	else:
@@ -170,13 +170,15 @@ func make_player_pull_object():
 			pull_object = wall_raycast.get_collider()
 
 func make_player_climb_ladder(delta):
-	if is_on_ladder():
+	if is_close_to_ladder():
 		if state != STATE.CLIMB_UP and state != STATE.CLIMB_DOWN:
-			ladder_object.find_closet_point(global_position)
+			nearest_ladder.find_closet_point(global_position)
 		
 		if Input.is_action_pressed("move_up"):
+			ladder_object = nearest_ladder
 			ladder_object.climb(self, CLIMB_UP_SPEED * delta)
 		elif Input.is_action_pressed("move_down"):
+			ladder_object = nearest_ladder
 			ladder_object.fall(self, CLIMB_DOWN_SPEED * delta)
 
 func has_player_landed():
@@ -200,14 +202,25 @@ func player_facing_direction():
 
 func _on_DetectLadder_area_entered(area):
 	if area is Ladder:
-		ladder_object = area
-		ladder_object.find_closet_point(global_position)
+		nearest_ladder = area
+		nearest_ladder.find_closet_point(global_position)
 
 func _on_DetectLadder_area_exited(_area):
-	if ladder_object:
-		ladder_object.leave()
-		ladder_object = null
-		player_velocity.y = CLIMB_FALL_SPEED
+	leave_ladder()
+	nearest_ladder = null
+
+func is_close_to_ladder():
+	return nearest_ladder != null
 
 func is_on_ladder():
 	return ladder_object != null
+
+func leave_ladder():
+	if nearest_ladder:
+		nearest_ladder.leave()
+	
+	if ladder_object:
+		ladder_object.leave()
+		ladder_object = null
+	
+	player_velocity.y = CLIMB_FALL_SPEED
