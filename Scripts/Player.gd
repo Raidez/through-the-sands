@@ -7,13 +7,18 @@ export(int) var MAX_SPEED = 200
 export(int) var ACCELERATION = 200
 export(int) var GROUND_FRICTION = 200
 
-export(int) var MAX_JUMP_NUMBER = 2
 
 #Variables de vitesse verticale du personnage joueur, modifiable dans l'éditeur
 export(int) var JUMP_FORCE = -150
 export(int) var MAX_FALL_SPEED = 500
 export(int) var FAST_FALL_SPEED = 200
 export(int) var GRAVITY = 5
+export(int) var DASH_SPEED = 1000
+export(float) var DASH_LENGTH = .05
+
+#Variables pour compter le nombres de saut et de dash. Facilite la possibilité de faire des upgrades dans le jeu
+export(int) var MAX_JUMP_NUMBER = 2
+export(int) var MAX_DASH_NUMBER = 1
 
 export(int) var WALL_DETECTION_DISTANCE = 15
 export(int) var PULL_PINJOINT = 12
@@ -24,24 +29,29 @@ onready var player_animated_sprite = $AnimatedSprite
 #Variable pour stocker les minuteurs joueur
 onready var coyote_time = $CoyoteTimeTimer
 onready var jump_buffer = $JumpBufferTimer
+onready var dash_timer = $DashTimer
 
 onready var wall_raycast = $WallRaycast as RayCast2D
 onready var ground_raycast = $GroundRaycast as RayCast2D
 
 #Variables pour stocker l'état du joueur
-enum STATE { IDLE, RUN, JUMP, PUSH, PULL }
+enum STATE { IDLE, RUN, JUMP, PUSH, PULL, DASH }
 var state = STATE.IDLE
 
 #Variable pour stocker les bouttons du joueur, facile à changer pour plus tard
 var input_move_right = "move_right"
 var input_move_left = "move_left"
-var input_jump = "move_jump"
+var input_move_up = "move_up"
 var input_move_down = "move_down"
+var input_move_dash = "move_dash"
+var input_jump = "move_jump"
 var input_pull_object = "pull_object"
 
 var player_direction = Vector2.ZERO
 var player_velocity = Vector2.ZERO
 var jump_count = 0
+var dash_count = 0
+var is_dashing = false
 var fast_fall = false
 var pull_object = null
 
@@ -59,7 +69,7 @@ func _state():
 		state = STATE.PULL
 	elif wall_raycast.is_colliding() and player_direction.x != 0:
 		state = STATE.PUSH
-	elif not is_on_floor():
+	elif player_velocity.y != 0:
 		state = STATE.JUMP
 	elif is_zero_approx(player_velocity.x):
 		state = STATE.IDLE
@@ -74,15 +84,20 @@ func _animate():
 
 func _physics_process(delta):
 	get_player_direction()
-	make_player_move_horizontal(player_direction.x)
-	make_player_move_vertical()
+	make_player_move_dash()
+	if dash_timer.is_stopped():
+		make_player_move_horizontal(player_direction.x)
+		make_player_move_vertical()
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
 
 func get_player_direction():
 	player_direction.x = Input.get_action_strength(input_move_right) - Input.get_action_strength(input_move_left)
+	player_direction.y = Input.get_action_strength(input_move_down) - Input.get_action_strength(input_move_up)
 
 func apply_gravity():
+	if is_dashing:
+		return
 	player_velocity.y += GRAVITY;
 	player_velocity.y = min(player_velocity.y, MAX_FALL_SPEED)
 
@@ -137,15 +152,35 @@ func make_player_move_vertical():
 		elif !jump_buffer.is_stopped():
 			make_player_jump()
 		
+		#Permet d'avoir une hauteur de saut minimum
 		if Input.is_action_just_released(input_jump) and player_velocity.y < JUMP_FORCE / 2:
 			player_velocity.y = JUMP_FORCE / 2
 		
+		#Fait chuter le joueur plus vite après un saut
 		if player_velocity.y > 0 and !fast_fall:
 			player_velocity.y = FAST_FALL_SPEED
 			fast_fall = true
 		
 	
 	has_player_landed()
+
+func make_player_move_dash():
+	if is_on_floor():
+		dash_count = 0
+	
+	if Input.is_action_just_pressed(input_move_dash) and dash_count < MAX_DASH_NUMBER and player_direction != Vector2.ZERO:
+		print("Trying to dash")
+		dash_timer.start(DASH_LENGTH)
+		dash_count += 1
+		is_dashing = true
+		player_velocity.x =  DASH_SPEED * player_direction.x
+		print(player_direction)
+		
+	if dash_timer.is_stopped():
+		is_dashing = false
+		if !is_on_floor():
+			apply_gravity()
+	print(player_velocity)
 
 func make_player_jump():
 	

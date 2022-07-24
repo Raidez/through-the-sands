@@ -15,13 +15,9 @@ region = Rect2( 72, 0, 24, 24 )
 atlas = ExtResource( 1 )
 region = Rect2( 48, 0, 24, 24 )
 
-[sub_resource type="AtlasTexture" id=9]
+[sub_resource type="AtlasTexture" id=4]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 24, 24, 24 )
-
-[sub_resource type="AtlasTexture" id=10]
-atlas = ExtResource( 1 )
-region = Rect2( 24, 24, 24, 24 )
+region = Rect2( 72, 0, 24, 24 )
 
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 1 )
@@ -31,9 +27,13 @@ region = Rect2( 144, 0, 24, 24 )
 atlas = ExtResource( 1 )
 region = Rect2( 168, 0, 24, 24 )
 
-[sub_resource type="AtlasTexture" id=4]
+[sub_resource type="AtlasTexture" id=9]
 atlas = ExtResource( 1 )
-region = Rect2( 72, 0, 24, 24 )
+region = Rect2( 0, 24, 24, 24 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 1 )
+region = Rect2( 24, 24, 24, 24 )
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
@@ -47,9 +47,9 @@ animations = [ {
 "name": "run",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 9 ), SubResource( 10 ) ],
+"frames": [ SubResource( 4 ) ],
 "loop": true,
-"name": "pull",
+"name": "jump",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 7 ), SubResource( 8 ) ],
@@ -57,9 +57,9 @@ animations = [ {
 "name": "push",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 4 ) ],
+"frames": [ SubResource( 9 ), SubResource( 10 ) ],
 "loop": true,
-"name": "jump",
+"name": "pull",
 "speed": 5.0
 } ]
 
@@ -75,7 +75,7 @@ script = ExtResource( 2 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -11 )
 frames = SubResource( 5 )
-animation = "idle"
+animation = "run"
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -88,6 +88,10 @@ one_shot = true
 
 [node name="JumpBufferTimer" type="Timer" parent="."]
 wait_time = 0.2
+one_shot = true
+
+[node name="DashTimer" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
 
 [node name="WallRaycast" type="RayCast2D" parent="."]
