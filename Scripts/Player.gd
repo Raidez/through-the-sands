@@ -9,7 +9,7 @@ export(int) var GROUND_FRICTION = 200
 
 
 #Variables de vitesse verticale du personnage joueur, modifiable dans l'éditeur
-export(int) var JUMP_FORCE = -150
+export(int) var JUMP_FORCE = -250
 export(int) var MAX_FALL_SPEED = 500
 export(int) var FAST_FALL_SPEED = 200
 export(int) var GRAVITY = 5
