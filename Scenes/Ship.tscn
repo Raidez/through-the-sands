@@ -6,7 +6,7 @@
 
 [sub_resource type="Curve2D" id=2]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 16, -2, 0, 0, 0, 0, 5, -101 )
+"points": PoolVector2Array( 0, 0, 0, 0, 14, -8, 0, 0, 0, 0, 5, -99 )
 }
 
 [node name="Ship" type="KinematicBody2D" groups=["pullable", "pushable"]]
@@ -33,11 +33,11 @@ autostart = true
 curve = SubResource( 2 )
 
 [node name="PathFollow2D" parent="Ladder/Path2D" index="0"]
-position = Vector2( 16, -2 )
+position = Vector2( 14, -8 )
 rotation = -1.68145
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ladder"]
-polygon = PoolVector2Array( 17, -2, 6, -101, 4, -101, 15, -2 )
+polygon = PoolVector2Array( 17, -2, 7, -101, 3, -101, 13, -2 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 
