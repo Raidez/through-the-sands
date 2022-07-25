@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Area2D",
+"class": "Ladder",
+"language": "GDScript",
+"path": "res://Scripts/Ladder.gd"
+}, {
 "base": "PanelContainer",
 "class": "LogContainer",
 "language": "GDScript",
@@ -50,6 +55,7 @@ _global_script_classes=[ {
 "path": "res://addons/hyperlog/value_tracker.gd"
 } ]
 _global_script_class_icons={
+"Ladder": "",
 "LogContainer": "",
 "Tracker": "",
 "TrackerAngle": "",
