@@ -87,8 +87,7 @@ func _state():
 		state = STATE.IDLE
 	else:
 		state = STATE.RUN
-		
-	print(state)
+	
 
 func _animate():
 	var animation_state = STATE.keys()[state].to_lower()
@@ -231,7 +230,6 @@ func make_player_pull_object():
 	# action pour permettre de tirer un objet
 	if Input.is_action_just_pressed(input_pull_object) and pull_object:
 		pull_object = null
-	
 	elif Input.is_action_just_pressed(input_pull_object) and not is_on_something():
 		var collider = wall_raycast.get_collider()
 		if wall_raycast.is_colliding() and collider.is_in_group("pullable"):
