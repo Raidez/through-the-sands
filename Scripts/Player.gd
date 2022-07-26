@@ -81,12 +81,14 @@ func _state():
 		state = STATE.PULL
 	elif wall_raycast.is_colliding() and player_direction.x != 0:
 		state = STATE.PUSH
-	elif player_velocity.y != 0:
+	elif !is_zero_approx(player_velocity.y):
 		state = STATE.JUMP
 	elif is_zero_approx(player_velocity.x):
 		state = STATE.IDLE
 	else:
 		state = STATE.RUN
+		
+	print(state)
 
 func _animate():
 	var animation_state = STATE.keys()[state].to_lower()
@@ -199,7 +201,6 @@ func make_player_move_dash():
 		is_dashing = false
 		if !is_on_floor():
 			apply_gravity()
-	print(player_velocity)
 
 func make_player_jump():
 	if is_on_ladder():
@@ -235,6 +236,7 @@ func make_player_pull_object():
 		var collider = wall_raycast.get_collider()
 		if wall_raycast.is_colliding() and collider.is_in_group("pullable"):
 			pull_object = wall_raycast.get_collider()
+			print("Trying to pull the object")
 
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
