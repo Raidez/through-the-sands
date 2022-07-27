@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Assets/ship.png" type="Texture" id=1]
-[ext_resource path="res://Scripts/Ship.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/Box.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/Ladder.tscn" type="PackedScene" id=3]
 
 [sub_resource type="Curve2D" id=2]
@@ -9,7 +9,7 @@ _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 14, -8, 0, 0, 0, 0, 5, -99 )
 }
 
-[node name="Ship" type="KinematicBody2D" groups=["pullable", "pushable"]]
+[node name="Ship" type="KinematicBody2D"]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource( 2 )

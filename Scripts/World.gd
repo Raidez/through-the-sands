@@ -6,5 +6,5 @@ onready var player = $Player
 func _ready():
 	HyperLog.log(player).text("player_velocity>round")
 	HyperLog.log(player).text("state")
-	
-	HyperLog.log(ship).text("ship_velocity>round")
+#
+	HyperLog.log(ship).text("velocity>round")

@@ -15,10 +15,6 @@ region = Rect2( 48, 0, 24, 24 )
 atlas = ExtResource( 1 )
 region = Rect2( 72, 0, 24, 24 )
 
-[sub_resource type="AtlasTexture" id=4]
-atlas = ExtResource( 1 )
-region = Rect2( 72, 0, 24, 24 )
-
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 1 )
 region = Rect2( 144, 0, 24, 24 )
@@ -35,6 +31,10 @@ region = Rect2( 0, 24, 24, 24 )
 atlas = ExtResource( 1 )
 region = Rect2( 24, 24, 24, 24 )
 
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 1 )
+region = Rect2( 72, 0, 24, 24 )
+
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
 "frames": [ SubResource( 3 ) ],
@@ -47,19 +47,9 @@ animations = [ {
 "name": "climb_up",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 4 ) ],
-"loop": true,
-"name": "jump",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 7 ), SubResource( 8 ) ],
 "loop": true,
 "name": "push",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 2 ), SubResource( 1 ) ],
-"loop": true,
-"name": "climb_down",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 9 ), SubResource( 10 ) ],
@@ -67,9 +57,19 @@ animations = [ {
 "name": "pull",
 "speed": 5.0
 }, {
+"frames": [ SubResource( 4 ) ],
+"loop": true,
+"name": "jump",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 1 ), SubResource( 2 ) ],
 "loop": true,
 "name": "run",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 2 ), SubResource( 1 ) ],
+"loop": true,
+"name": "climb_down",
 "speed": 5.0
 } ]
 
