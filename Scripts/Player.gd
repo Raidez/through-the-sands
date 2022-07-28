@@ -66,7 +66,6 @@ func _ready():
 	wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
 
 func _process(delta):
-	make_player_pull_object()
 	
 	_state()
 	_animate()
@@ -98,7 +97,7 @@ func _animate():
 func _physics_process(delta):
 	get_player_direction()
 	make_player_move_dash()
-	
+	print(is_on_floor())
 	if dash_timer.is_stopped():
 		make_player_move_horizontal(player_direction.x)
 		make_player_move_vertical()
