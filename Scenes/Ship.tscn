@@ -9,9 +9,9 @@ _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 14, -8, 0, 0, 0, 0, 5, -99 )
 }
 
-[node name="Ship" type="KinematicBody2D"]
+[node name="Ship" type="KinematicBody2D" groups=["ship"]]
 collision_layer = 4
-collision_mask = 3
+collision_mask = 7
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

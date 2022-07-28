@@ -1,12 +1,13 @@
 extends KinematicBody2D
 
+class_name Player
+
 #Variable de vitesse horizontale du personnage joueur, modifiable dans l'éditeur
 export(int) var PUSH_SPEED = 100
 export(int) var PULL_SPEED = 20
 export(int) var MAX_SPEED = 200
 export(int) var ACCELERATION = 200
 export(int) var GROUND_FRICTION = 200
-
 
 #Variables de vitesse verticale du personnage joueur, modifiable dans l'éditeur
 export(int) var JUMP_FORCE = -250
