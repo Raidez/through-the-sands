@@ -83,6 +83,7 @@ extents = Vector2( 4.75, 4.25 )
 position = Vector2( 0, 9 )
 collision_layer = 2
 collision_mask = 5
+collision/safe_margin = 0.2
 script = ExtResource( 2 )
 MAX_SPEED = 100
 ACCELERATION = 100
