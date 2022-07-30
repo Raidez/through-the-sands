@@ -8,3 +8,10 @@ func _ready():
 	HyperLog.log(player).text("state")
 #
 	HyperLog.log(ship).text("velocity>round")
+
+
+func _on_Lever1_power_on():
+	get_tree().call_group("door1", "open")
+
+func _on_Lever1_power_off():
+	get_tree().call_group("door1", "close")
