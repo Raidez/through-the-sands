@@ -60,15 +60,18 @@ var fast_fall = false
 var pull_object = null
 var nearest_ladder = null
 var ladder_object = null
+var lever_object = null
 
 ####################################################################################################
 
 func _ready():
 	wall_raycast.cast_to.x = -WALL_DETECTION_DISTANCE
 
-func _process(delta):
+func _process(_delta):
 	_state()
 	_animate()
+	
+	make_player_use_lever()
 
 func _state():
 	if is_on_ladder():
@@ -105,6 +108,8 @@ func _physics_process(delta):
 	make_player_climb_ladder(delta)
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
+
+####################################################################################################
 
 func get_player_direction():
 	player_direction.x = Input.get_action_strength(input_move_right) - Input.get_action_strength(input_move_left)
@@ -229,6 +234,10 @@ func make_player_pull_object():
 		if wall_raycast.is_colliding() and collider is Box:
 			pull_object = wall_raycast.get_collider()
 
+func make_player_use_lever():
+	if lever_object and Input.is_action_just_pressed("activate"):
+		lever_object.switch()
+
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
 	var was_in_air = not is_on_floor()
@@ -254,9 +263,18 @@ func _on_DetectLadder_area_entered(area):
 		nearest_ladder = area
 		nearest_ladder.find_closet_point(global_position)
 
-func _on_DetectLadder_area_exited(_area):
-	leave_ladder()
-	nearest_ladder = null
+func _on_DetectLadder_area_exited(area):
+	if area is Ladder:
+		leave_ladder()
+		nearest_ladder = null
+
+func _on_DetectLever_area_entered(area):
+	if area is Lever:
+		lever_object = area
+
+func _on_DetectLever_area_exited(area):
+	if area is Lever:
+		lever_object = null
 
 ####################################################################################################
 

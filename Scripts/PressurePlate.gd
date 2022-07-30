@@ -6,7 +6,7 @@ export(int, FLAGS, "Box", "Ship", "Player") var trigger = 7
 onready var animation = $AnimatedSprite as AnimatedSprite
 onready var state = false
 
-func _process(delta):
+func _process(_delta):
 	if state:
 		animation.frame = 1
 	else:
@@ -23,6 +23,7 @@ func _on_PressurePlate_body_exited(body):
 		state = false
 
 func check_body(body) -> bool:
+	#On vérifie qui est l'activateur avant d'émettre un signal
 	var is_collision = false
 	if trigger & TRIGGER_TYPE.BOX == TRIGGER_TYPE.BOX:
 		is_collision = is_collision or body is Box and body.is_in_group("boxes")

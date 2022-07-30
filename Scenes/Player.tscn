@@ -15,14 +15,6 @@ region = Rect2( 48, 0, 24, 24 )
 atlas = ExtResource( 1 )
 region = Rect2( 72, 0, 24, 24 )
 
-[sub_resource type="AtlasTexture" id=9]
-atlas = ExtResource( 1 )
-region = Rect2( 0, 24, 24, 24 )
-
-[sub_resource type="AtlasTexture" id=10]
-atlas = ExtResource( 1 )
-region = Rect2( 24, 24, 24, 24 )
-
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 1 )
 region = Rect2( 144, 0, 24, 24 )
@@ -35,6 +27,14 @@ region = Rect2( 168, 0, 24, 24 )
 atlas = ExtResource( 1 )
 region = Rect2( 72, 0, 24, 24 )
 
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 24, 24, 24 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 1 )
+region = Rect2( 24, 24, 24, 24 )
+
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
 "frames": [ SubResource( 3 ) ],
@@ -45,16 +45,6 @@ animations = [ {
 "frames": [ SubResource( 2 ), SubResource( 1 ) ],
 "loop": true,
 "name": "climb_up",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 9 ), SubResource( 10 ) ],
-"loop": true,
-"name": "pull",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 2 ), SubResource( 1 ) ],
-"loop": true,
-"name": "climb_down",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 7 ), SubResource( 8 ) ],
@@ -71,13 +61,23 @@ animations = [ {
 "loop": true,
 "name": "jump",
 "speed": 5.0
+}, {
+"frames": [ SubResource( 9 ), SubResource( 10 ) ],
+"loop": true,
+"name": "pull",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 2 ), SubResource( 1 ) ],
+"loop": true,
+"name": "climb_down",
+"speed": 5.0
 } ]
 
 [sub_resource type="RectangleShape2D" id=12]
 extents = Vector2( 6, 8 )
 
 [sub_resource type="RectangleShape2D" id=11]
-extents = Vector2( 4.75, 4.25 )
+extents = Vector2( 11, 12 )
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
@@ -93,6 +93,7 @@ animation = "idle"
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( 0, -8 )
 shape = SubResource( 12 )
 
@@ -108,18 +109,21 @@ wait_time = 0.05
 one_shot = true
 
 [node name="WallRaycast" type="RayCast2D" parent="."]
+visible = false
 position = Vector2( 0, -9 )
 enabled = true
 cast_to = Vector2( -15, 0 )
 collision_mask = 5
 
 [node name="GroundRaycast" type="RayCast2D" parent="."]
+visible = false
 position = Vector2( 0, -9 )
 enabled = true
 cast_to = Vector2( 0, 15 )
 collision_mask = 5
 
 [node name="DetectLadder" type="Area2D" parent="."]
+visible = false
 collision_layer = 2
 collision_mask = 4
 
@@ -127,10 +131,22 @@ collision_mask = 4
 position = Vector2( 0, -5 )
 shape = SubResource( 11 )
 
+[node name="DetectLever" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectLever"]
+position = Vector2( 0, -12 )
+shape = SubResource( 11 )
+
 [node name="PlayerFollowCamera" type="Camera2D" parent="."]
+visible = false
 offset = Vector2( 25, 0 )
 current = true
 smoothing_enabled = true
 
 [connection signal="area_entered" from="DetectLadder" to="." method="_on_DetectLadder_area_entered"]
 [connection signal="area_exited" from="DetectLadder" to="." method="_on_DetectLadder_area_exited"]
+[connection signal="area_entered" from="DetectLever" to="." method="_on_DetectLever_area_entered"]
+[connection signal="area_exited" from="DetectLever" to="." method="_on_DetectLever_area_exited"]
