@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Ship.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Scenes/PressurePlate.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scenes/Lever.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Scenes/Door.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=10]
 
 [sub_resource type="Curve2D" id=1]
 _data = {
@@ -23,59 +24,71 @@ __meta__ = {
 }
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 360, 130 )
+position = Vector2( 434, 288 )
 
 [node name="TileMap" parent="." instance=ExtResource( 3 )]
 collision_mask = 7
-tile_data = PoolIntArray( 327683, 0, 0, 327684, 0, 0, 327685, 0, 0, 393221, 0, 0, 393222, 0, 0, 393223, 0, 0, 393224, 0, 0, 393225, 0, 0, 393226, 0, 0, 393227, 0, 0, 458758, 0, 0, 458759, 0, 0, 458760, 0, 0, 458761, 0, 0, 458762, 0, 0, 458763, 0, 0, 524299, 0, 0, 524300, 0, 0, 524301, 0, 0, 524302, 0, 0, 524303, 0, 0, 524304, 0, 0, 524305, 0, 0, 524306, 0, 0, 524307, 0, 0, 524308, 0, 0, 524309, 0, 0, 524310, 0, 0, 524311, 0, 0, 524312, 0, 0, 524313, 0, 0, 589839, 0, 0, 589840, 0, 0, 589841, 0, 0, 589842, 0, 0, 589843, 0, 0, 589844, 0, 0, 589845, 0, 0, 589846, 0, 0, 589847, 0, 0, 589848, 0, 0, 589849, 0, 0, 589850, 0, 0, 589851, 0, 0, 589852, 0, 0, 589863, 0, 0, 589864, 0, 0, 655399, 0, 0, 655400, 0, 0, 720934, 0, 0, 720935, 0, 0, 720936, 0, 0, 786470, 0, 0, 786471, 0, 0, 786472, 0, 0, 852005, 0, 0, 852006, 0, 0, 852007, 0, 0, 917539, 0, 0, 917540, 0, 0, 917541, 0, 0, 917542, 0, 0, 917543, 0, 0, 983061, 0, 0, 983062, 0, 0, 983063, 0, 0, 983064, 0, 0, 983065, 0, 0, 983066, 0, 0, 983067, 0, 0, 983068, 0, 0, 983073, 0, 0, 983074, 0, 0, 983075, 0, 0, 983076, 0, 0, 983077, 0, 0, 983078, 0, 0, 983079, 0, 0, 1048580, 0, 0, 1048581, 0, 0, 1048582, 0, 0, 1048583, 0, 0, 1048584, 0, 0, 1048585, 0, 0, 1048586, 0, 0, 1048587, 0, 0, 1048588, 0, 0, 1048589, 0, 0, 1048590, 0, 0, 1048591, 0, 0, 1048592, 0, 0, 1048593, 0, 0, 1048594, 0, 0, 1048595, 0, 0, 1048596, 0, 0, 1048597, 0, 0, 1048598, 0, 0, 1048599, 0, 0, 1048600, 0, 0, 1048601, 0, 0, 1048602, 0, 0, 1048603, 0, 0, 1048604, 0, 0, 1048605, 0, 0, 1048606, 0, 0, 1048607, 0, 0, 1048608, 0, 0, 1048609, 0, 0, 1048610, 0, 0, 1048611, 0, 0, 1048612, 0, 0, 1048613, 0, 0, 1048614, 0, 0, 1048615, 0, 0, 1114121, 0, 0, 1114122, 0, 0, 1114123, 0, 0, 1114124, 0, 0, 1114125, 0, 0, 1114126, 0, 0, 1114127, 0, 0, 1114128, 0, 0, 1114129, 0, 0, 1114130, 0, 0, 1114131, 0, 0, 1114132, 0, 0, 1114133, 0, 0, 1114134, 0, 0, 1114135, 0, 0, 1114136, 0, 0, 1114137, 0, 0, 1114138, 0, 0, 1114139, 0, 0, 1114140, 0, 0, 1114141, 0, 0, 1114142, 0, 0, 1114143, 0, 0, 1114144, 0, 0, 1114145, 0, 0, 1114146, 0, 0, 1114147, 0, 0, 1114148, 0, 0, 1114149, 0, 0, 1114150, 0, 0, 1179661, 0, 0, 1179662, 0, 0, 1179663, 0, 0, 1179664, 0, 0, 1179665, 0, 0, 1179666, 0, 0, 1179667, 0, 0, 1179668, 0, 0, 1179669, 0, 0, 1179670, 0, 0, 1179671, 0, 0, 1179672, 0, 0, 1179673, 0, 0, 1179674, 0, 0, 1179675, 0, 0, 1179676, 0, 0, 1179677, 0, 0, 1179678, 0, 0, 1179679, 0, 0, 1179680, 0, 0, 1179681, 0, 0, 1179682, 0, 0, 1245200, 0, 0, 1245201, 0, 0, 1245202, 0, 0, 1245203, 0, 0, 1245204, 0, 0, 1245205, 0, 0, 1245206, 0, 0, 1245207, 0, 0, 1245208, 0, 0, 1245209, 0, 0, 1245210, 0, 0, 1245211, 0, 0, 1245212, 0, 0, 1245213, 0, 0, 1245214, 0, 0, 1245215, 0, 0 )
+tile_data = PoolIntArray( 327683, 0, 0, 327684, 0, 0, 327685, 0, 0, 393221, 0, 0, 393222, 0, 0, 393223, 0, 0, 393224, 0, 0, 393225, 0, 0, 393226, 0, 0, 393227, 0, 0, 458758, 0, 0, 458759, 0, 0, 458760, 0, 0, 458761, 0, 0, 458762, 0, 0, 458763, 0, 0, 524299, 0, 0, 524300, 0, 0, 524301, 0, 0, 524302, 0, 0, 524303, 0, 0, 524304, 0, 0, 524305, 0, 0, 524306, 0, 0, 524307, 0, 0, 524308, 0, 0, 524309, 0, 0, 524310, 0, 0, 524311, 0, 0, 524312, 0, 0, 524313, 0, 0, 589839, 0, 0, 589840, 0, 0, 589841, 0, 0, 589842, 0, 0, 589843, 0, 0, 589844, 0, 0, 589845, 0, 0, 589846, 0, 0, 589847, 0, 0, 589848, 0, 0, 589849, 0, 0, 589850, 0, 0, 589851, 0, 0, 589852, 0, 0, 655404, 0, 0, 720940, 0, 0, 720941, 0, 0, 786476, 0, 0, 786477, 0, 0, 852011, 0, 0, 852012, 0, 0, 852013, 0, 0, 917547, 0, 0, 917548, 0, 0, 917549, 0, 0, 983082, 0, 0, 983083, 0, 0, 983084, 0, 0, 983085, 0, 0, 1048580, 0, 0, 1048581, 0, 0, 1048582, 0, 0, 1048583, 0, 0, 1048584, 0, 0, 1048585, 0, 0, 1048586, 0, 0, 1048587, 0, 0, 1048588, 0, 0, 1048589, 0, 0, 1048590, 0, 0, 1048591, 0, 0, 1048592, 0, 0, 1048618, 0, 0, 1048619, 0, 0, 1048620, 0, 0, 1048621, 0, 0, 1114121, 0, 0, 1114122, 0, 0, 1114123, 0, 0, 1114124, 0, 0, 1114125, 0, 0, 1114126, 0, 0, 1114127, 0, 0, 1114128, 0, 0, 1114129, 0, 0, 1114130, 0, 0, 1114131, 0, 0, 1114132, 0, 0, 1114151, 0, 0, 1114152, 0, 0, 1114153, 0, 0, 1114154, 0, 0, 1114155, 0, 0, 1114156, 0, 0, 1114157, 0, 0, 1179661, 0, 0, 1179662, 0, 0, 1179663, 0, 0, 1179664, 0, 0, 1179665, 0, 0, 1179666, 0, 0, 1179667, 0, 0, 1179668, 0, 0, 1179669, 0, 0, 1179670, 0, 0, 1179671, 0, 0, 1179672, 0, 0, 1179673, 0, 0, 1179674, 0, 0, 1179675, 0, 0, 1179676, 0, 0, 1179677, 0, 0, 1179678, 0, 0, 1179679, 0, 0, 1179680, 0, 0, 1179681, 0, 0, 1179682, 0, 0, 1179683, 0, 0, 1179684, 0, 0, 1179685, 0, 0, 1179686, 0, 0, 1179687, 0, 0, 1179688, 0, 0, 1179689, 0, 0, 1179690, 0, 0, 1179691, 0, 0, 1179692, 0, 0, 1179693, 0, 0, 1245200, 0, 0, 1245201, 0, 0, 1245202, 0, 0, 1245203, 0, 0, 1245204, 0, 0, 1245205, 0, 0, 1245206, 0, 0, 1245207, 0, 0, 1245208, 0, 0, 1245209, 0, 0, 1245210, 0, 0, 1245211, 0, 0, 1245212, 0, 0, 1245213, 0, 0, 1245214, 0, 0, 1245215, 0, 0, 1245216, 0, 0, 1245217, 0, 0, 1245218, 0, 0, 1245219, 0, 0, 1245220, 0, 0, 1245221, 0, 0, 1245222, 0, 0, 1245223, 0, 0, 1245224, 0, 0, 1245225, 0, 0, 1245226, 0, 0, 1245227, 0, 0, 1245228, 0, 0, 1245229, 0, 0 )
 
 [node name="Ship" parent="." instance=ExtResource( 2 )]
 position = Vector2( 274, 128 )
 
-[node name="Ladder" parent="." instance=ExtResource( 5 )]
+[node name="Interactibles" type="Node" parent="."]
+
+[node name="Ladder" parent="Interactibles" instance=ExtResource( 5 )]
 position = Vector2( 146, 66 )
 
-[node name="Path2D" parent="Ladder" index="0"]
+[node name="Path2D" parent="Interactibles/Ladder" index="0"]
 curve = SubResource( 1 )
 
-[node name="CollisionShape2D" type="CollisionPolygon2D" parent="Ladder"]
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="Interactibles/Ladder"]
 position = Vector2( -7.5, 65 )
 polygon = PoolVector2Array( 15.5, -70, 17.5, 164, -0.5, 164, 0.5, -70 )
 
-[node name="Box" parent="." instance=ExtResource( 6 )]
-position = Vector2( 402, 130 )
+[node name="Box" parent="Interactibles" instance=ExtResource( 6 )]
+position = Vector2( 603, 315 )
 
-[node name="PressurePlate1" parent="." instance=ExtResource( 7 )]
-position = Vector2( 430, 144 )
-trigger = 6
+[node name="PressurePlate1" parent="Interactibles" instance=ExtResource( 7 )]
+position = Vector2( 522, 324 )
 
-[node name="Lever1" parent="." instance=ExtResource( 8 )]
-position = Vector2( 306, 279 )
+[node name="Lever1" parent="Interactibles" instance=ExtResource( 8 )]
+position = Vector2( 378, 324 )
 
-[node name="Door1" type="Node" parent="."]
+[node name="Button1" parent="Interactibles" instance=ExtResource( 10 )]
+position = Vector2( 306, 306 )
+direction = 0
 
-[node name="Door" parent="Door1" groups=["door1"] instance=ExtResource( 9 )]
-position = Vector2( 243, 279 )
+[node name="Door1" type="Node2D" parent="Interactibles"]
+position = Vector2( 216, 162 )
+__meta__ = {
+"_edit_group_": true
+}
 
-[node name="Door2" parent="Door1" groups=["door1"] instance=ExtResource( 9 )]
-position = Vector2( 243, 261 )
+[node name="Door" parent="Interactibles/Door1" groups=["door1"] instance=ExtResource( 9 )]
+position = Vector2( 9, 117 )
 
-[node name="Door3" parent="Door1" groups=["door1"] instance=ExtResource( 9 )]
-position = Vector2( 243, 243 )
+[node name="Door2" parent="Interactibles/Door1" groups=["door1"] instance=ExtResource( 9 )]
+position = Vector2( 9, 99 )
 
-[node name="Door4" parent="Door1" groups=["door1"] instance=ExtResource( 9 )]
-position = Vector2( 243, 225 )
+[node name="Door3" parent="Interactibles/Door1" groups=["door1"] instance=ExtResource( 9 )]
+position = Vector2( 9, 81 )
 
-[node name="Door5" parent="Door1" groups=["door1"] instance=ExtResource( 9 )]
-position = Vector2( 243, 207 )
+[node name="Door4" parent="Interactibles/Door1" groups=["door1"] instance=ExtResource( 9 )]
+position = Vector2( 9, 63 )
 
-[node name="Door6" parent="Door1" groups=["door1"] instance=ExtResource( 9 )]
-position = Vector2( 243, 189 )
+[node name="Door5" parent="Interactibles/Door1" groups=["door1"] instance=ExtResource( 9 )]
+position = Vector2( 9, 45 )
 
-[node name="Door7" parent="Door1" groups=["door1"] instance=ExtResource( 9 )]
-position = Vector2( 243, 171 )
+[node name="Door6" parent="Interactibles/Door1" groups=["door1"] instance=ExtResource( 9 )]
+position = Vector2( 9, 27 )
 
-[connection signal="power_off" from="Lever1" to="." method="_on_Lever1_power_off"]
-[connection signal="power_on" from="Lever1" to="." method="_on_Lever1_power_on"]
+[node name="Door7" parent="Interactibles/Door1" groups=["door1"] instance=ExtResource( 9 )]
+position = Vector2( 9, 9 )
 
-[editable path="Ladder"]
+[connection signal="power_off" from="Interactibles/PressurePlate1" to="." method="_on_PressurePlate1_power_off"]
+[connection signal="power_on" from="Interactibles/PressurePlate1" to="." method="_on_PressurePlate1_power_on"]
+[connection signal="power_off" from="Interactibles/Lever1" to="." method="_on_Lever1_power_off"]
+[connection signal="power_on" from="Interactibles/Lever1" to="." method="_on_Lever1_power_on"]
+[connection signal="power_on" from="Interactibles/Button1" to="." method="_on_Button1_power_on"]
+
+[editable path="Interactibles/Ladder"]

@@ -60,7 +60,7 @@ var fast_fall = false
 var pull_object = null
 var nearest_ladder = null
 var ladder_object = null
-var lever_object = null
+var interact_object = null
 
 ####################################################################################################
 
@@ -71,7 +71,7 @@ func _process(_delta):
 	_state()
 	_animate()
 	
-	make_player_use_lever()
+	make_player_interact()
 
 func _state():
 	if is_on_ladder():
@@ -234,9 +234,12 @@ func make_player_pull_object():
 		if wall_raycast.is_colliding() and collider is Box:
 			pull_object = wall_raycast.get_collider()
 
-func make_player_use_lever():
-	if lever_object and Input.is_action_just_pressed("activate"):
-		lever_object.switch()
+func make_player_interact():
+	if interact_object and Input.is_action_just_pressed("activate"):
+		if interact_object is Lever:
+			interact_object.switch()
+		elif interact_object is IButton:
+			interact_object.press()
 
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
@@ -268,13 +271,13 @@ func _on_DetectLadder_area_exited(area):
 		leave_ladder()
 		nearest_ladder = null
 
-func _on_DetectLever_area_entered(area):
-	if area is Lever:
-		lever_object = area
+func _on_DetectInteract_area_entered(area):
+	if area is Interact:
+		interact_object = area
 
-func _on_DetectLever_area_exited(area):
-	if area is Lever:
-		lever_object = null
+func _on_DetectInteract_area_exited(area):
+	if area is Interact:
+		interact_object = area
 
 ####################################################################################################
 

@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Assets/SpriteSheets/tiles_packed.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Button.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 18, 9 )
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 1 )
+region = Rect2( 144, 126, 18, 18 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 1 )
+region = Rect2( 162, 126, 18, 18 )
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 2 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="Button" type="Area2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource( 2 )
+
+[node name="RightCollision" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -9 )
+shape = SubResource( 4 )
+
+[node name="RightSprite" type="AnimatedSprite" parent="RightCollision"]
+position = Vector2( 9, 0 )
+rotation = -1.5708
+frames = SubResource( 3 )
+
+[node name="LeftCollision" type="CollisionShape2D" parent="."]
+position = Vector2( 18, -9 )
+shape = SubResource( 4 )
+
+[node name="LeftSprite" type="AnimatedSprite" parent="LeftCollision"]
+position = Vector2( -9, 0 )
+rotation = -1.5708
+frames = SubResource( 3 )
+flip_v = true

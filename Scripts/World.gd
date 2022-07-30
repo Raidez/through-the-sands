@@ -15,3 +15,12 @@ func _on_Lever1_power_on():
 
 func _on_Lever1_power_off():
 	get_tree().call_group("door1", "close")
+
+func _on_Button1_power_on():
+	get_tree().call_group("door1", "open")
+
+func _on_PressurePlate1_power_on():
+	get_tree().call_group("door1", "open")
+
+func _on_PressurePlate1_power_off():
+	get_tree().call_group("door1", "close")

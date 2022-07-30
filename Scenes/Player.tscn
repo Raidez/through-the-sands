@@ -52,11 +52,6 @@ animations = [ {
 "name": "push",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 1 ), SubResource( 2 ) ],
-"loop": true,
-"name": "run",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 4 ) ],
 "loop": true,
 "name": "jump",
@@ -65,6 +60,11 @@ animations = [ {
 "frames": [ SubResource( 9 ), SubResource( 10 ) ],
 "loop": true,
 "name": "pull",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 1 ), SubResource( 2 ) ],
+"loop": true,
+"name": "run",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 2 ), SubResource( 1 ) ],
@@ -131,12 +131,11 @@ collision_mask = 4
 position = Vector2( 0, -5 )
 shape = SubResource( 11 )
 
-[node name="DetectLever" type="Area2D" parent="."]
-visible = false
+[node name="DetectInteract" type="Area2D" parent="."]
 collision_layer = 2
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectLever"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectInteract"]
 position = Vector2( 0, -12 )
 shape = SubResource( 11 )
 
@@ -148,5 +147,5 @@ smoothing_enabled = true
 
 [connection signal="area_entered" from="DetectLadder" to="." method="_on_DetectLadder_area_entered"]
 [connection signal="area_exited" from="DetectLadder" to="." method="_on_DetectLadder_area_exited"]
-[connection signal="area_entered" from="DetectLever" to="." method="_on_DetectLever_area_entered"]
-[connection signal="area_exited" from="DetectLever" to="." method="_on_DetectLever_area_exited"]
+[connection signal="area_entered" from="DetectInteract" to="." method="_on_DetectInteract_area_entered"]
+[connection signal="area_exited" from="DetectInteract" to="." method="_on_DetectInteract_area_exited"]
