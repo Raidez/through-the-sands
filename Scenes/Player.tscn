@@ -44,12 +44,7 @@ animations = [ {
 }, {
 "frames": [ SubResource( 2 ), SubResource( 1 ) ],
 "loop": true,
-"name": "climb_up",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 1 ), SubResource( 2 ) ],
-"loop": true,
-"name": "run",
+"name": "climb",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 8 ), SubResource( 7 ) ],
@@ -57,14 +52,14 @@ animations = [ {
 "name": "push",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 2 ), SubResource( 1 ) ],
-"loop": true,
-"name": "climb_down",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 4 ) ],
 "loop": true,
 "name": "jump",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 1 ), SubResource( 2 ) ],
+"loop": true,
+"name": "run",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 10 ), SubResource( 9 ) ],
@@ -85,13 +80,12 @@ collision_layer = 2
 collision_mask = 5
 collision/safe_margin = 0.2
 script = ExtResource( 2 )
-MAX_SPEED = 100
-ACCELERATION = 100
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -12 )
 frames = SubResource( 5 )
-animation = "push"
+animation = "climb"
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
