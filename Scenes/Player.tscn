@@ -15,25 +15,25 @@ region = Rect2( 48, 0, 24, 24 )
 atlas = ExtResource( 1 )
 region = Rect2( 72, 0, 24, 24 )
 
-[sub_resource type="AtlasTexture" id=7]
-atlas = ExtResource( 1 )
-region = Rect2( 144, 0, 24, 24 )
-
 [sub_resource type="AtlasTexture" id=8]
 atlas = ExtResource( 1 )
 region = Rect2( 168, 0, 24, 24 )
 
-[sub_resource type="AtlasTexture" id=4]
+[sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 1 )
-region = Rect2( 72, 0, 24, 24 )
-
-[sub_resource type="AtlasTexture" id=9]
-atlas = ExtResource( 1 )
-region = Rect2( 0, 24, 24, 24 )
+region = Rect2( 144, 0, 24, 24 )
 
 [sub_resource type="AtlasTexture" id=10]
 atlas = ExtResource( 1 )
 region = Rect2( 24, 24, 24, 24 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 1 )
+region = Rect2( 72, 0, 24, 24 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 1 )
+region = Rect2( 72, 0, 24, 24 )
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
@@ -44,22 +44,22 @@ animations = [ {
 }, {
 "frames": [ SubResource( 2 ), SubResource( 1 ) ],
 "loop": true,
-"name": "climb_up",
+"name": "climb",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 7 ), SubResource( 8 ) ],
+"frames": [ SubResource( 8 ), SubResource( 7 ) ],
 "loop": true,
 "name": "push",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 4 ) ],
-"loop": true,
-"name": "jump",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 9 ), SubResource( 10 ) ],
+"frames": [ SubResource( 10 ), SubResource( 9 ) ],
 "loop": true,
 "name": "pull",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 2 ), SubResource( 1 ) ],
+"loop": true,
+"name": "climb_down",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 1 ), SubResource( 2 ) ],
@@ -67,9 +67,9 @@ animations = [ {
 "name": "run",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 2 ), SubResource( 1 ) ],
+"frames": [ SubResource( 4 ) ],
 "loop": true,
-"name": "climb_down",
+"name": "jump",
 "speed": 5.0
 } ]
 
@@ -80,16 +80,17 @@ extents = Vector2( 6, 8 )
 extents = Vector2( 11, 12 )
 
 [node name="Player" type="KinematicBody2D"]
+position = Vector2( 0, 9 )
 collision_layer = 2
 collision_mask = 5
+collision/safe_margin = 0.2
 script = ExtResource( 2 )
-MAX_SPEED = 100
-ACCELERATION = 100
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -12 )
 frames = SubResource( 5 )
-animation = "idle"
+animation = "climb"
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -132,6 +133,7 @@ position = Vector2( 0, -5 )
 shape = SubResource( 11 )
 
 [node name="DetectInteract" type="Area2D" parent="."]
+visible = false
 collision_layer = 2
 collision_mask = 4
 
