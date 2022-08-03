@@ -1,0 +1,24 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/CustomRessource/Scripts/PlayerDefaultMovementData.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+PUSH_SPEED = 100
+PULL_SPEED = 20
+MAX_SPEED = 100
+ACCELERATION = 100
+GROUND_FRICTION = 100
+JUMP_FORCE = -250
+MAX_FALL_SPEED = 250
+FAST_FALL_SPEED = 150
+GRAVITY = 5
+CLIMB_UP_SPEED = 100
+CLIMB_DOWN_SPEED = 100
+CLIMB_FALL_SPEED = 100
+DASH_SPEED = 1000
+DASH_LENGTH = 0.05
+MAX_JUMP_NUMBER = 2
+MAX_DASH_NUMBER = 1
+WALL_DETECTION_DISTANCE = 15
+PULL_PINJOINT = 12
