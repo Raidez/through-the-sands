@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+class_name Player
+
 export(Resource) var move_data = preload("res://Scripts/CustomRessource/PlayerMovementData.tres") as PlayerMovementData
 
 #Variable pour stocker l'animation du joueur
@@ -35,16 +37,18 @@ var fast_fall = false
 var pull_object = null
 var nearest_ladder = null
 var ladder_object = null
+var interact_object = null
 
 ####################################################################################################
 
 func _ready():
 	wall_raycast.cast_to.x = -move_data.WALL_DETECTION_DISTANCE
 
-func _process(delta):
-	
+func _process(_delta):
 	_state()
 	_animate()
+	
+	make_player_interact()
 
 func _state():
 	if is_on_ladder():
@@ -73,6 +77,8 @@ func _physics_process(delta):
 	make_player_climb_ladder(delta)
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
+
+####################################################################################################
 
 func get_player_direction():
 	player_direction.x = Input.get_axis(input_move_left, input_move_right)
@@ -117,7 +123,7 @@ func make_player_move_horizontal(direction):
 		# on pousse l'objet si on n'est pas sur l'objet lui-même
 		if state == STATE.PUSH:
 			var push_object = wall_raycast.get_collider()
-			if push_object and push_object.is_in_group("pushable") and not is_on_something():
+			if push_object and push_object is Box and not is_on_something():
 				push_object.slide(player_velocity)
 		elif state == STATE.PULL:
 			pull_object.slide(player_velocity)
@@ -193,19 +199,21 @@ func make_player_climb_ladder(delta):
 			ladder_object = nearest_ladder
 			ladder_object.fall(self, move_data.CLIMB_DOWN_SPEED * delta)
 
-func is_on_something():
-	var ground = ground_raycast.get_collider()
-	return ground and (ground.is_in_group("pushable") or ground.is_in_group("pushable"))
-
 func make_player_pull_object():
 	# action pour permettre de tirer un objet
 	if Input.is_action_just_pressed(input_pull_object) and pull_object:
 		pull_object = null
 	elif Input.is_action_just_pressed(input_pull_object) and not is_on_something():
 		var collider = wall_raycast.get_collider()
-		if wall_raycast.is_colliding() and collider.is_in_group("pullable"):
+		if wall_raycast.is_colliding() and collider is Box:
 			pull_object = wall_raycast.get_collider()
-			print("Trying to pull the object")
+
+func make_player_interact():
+	if interact_object and Input.is_action_just_pressed("activate"):
+		if interact_object is Lever:
+			interact_object.switch()
+		elif interact_object is IButton:
+			interact_object.press()
 
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
@@ -232,15 +240,20 @@ func _on_DetectLadder_area_entered(area):
 		nearest_ladder = area
 		nearest_ladder.find_closet_point(global_position)
 
-func _on_DetectLadder_area_exited(_area):
-	leave_ladder()
-	nearest_ladder = null
+func _on_DetectLadder_area_exited(area):
+	if area is Ladder:
+		leave_ladder()
+		nearest_ladder = null
 
-func is_close_to_ladder():
-	return nearest_ladder != null
+func _on_DetectInteract_area_entered(area):
+	if area is Interact:
+		interact_object = area
 
-func is_on_ladder():
-	return ladder_object != null
+func _on_DetectInteract_area_exited(area):
+	if area is Interact:
+		interact_object = area
+
+####################################################################################################
 
 func leave_ladder():
 	if nearest_ladder:
@@ -249,3 +262,13 @@ func leave_ladder():
 	if ladder_object:
 		ladder_object.leave()
 		ladder_object = null
+
+func is_close_to_ladder():
+	return nearest_ladder != null
+
+func is_on_ladder():
+	return ladder_object != null
+
+func is_on_something():
+	var ground = ground_raycast.get_collider()
+	return ground and ground is Box
