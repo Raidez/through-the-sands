@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Ship.tscn" type="PackedScene" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Scenes/Lever.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Scenes/Door.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Scenes/Platform.tscn" type="PackedScene" id=11]
 
 [sub_resource type="Curve2D" id=1]
 _data = {
@@ -84,6 +85,53 @@ position = Vector2( 9, 27 )
 
 [node name="Door7" parent="Interactibles/Door1" groups=["door1"] instance=ExtResource( 9 )]
 position = Vector2( 9, 9 )
+
+[node name="Platforms" type="Node" parent="."]
+
+[node name="Platform" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 486, 126 )
+
+[node name="Platform2" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 576, 126 )
+
+[node name="Platform7" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 594, 126 )
+
+[node name="Platform8" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 684, 126 )
+
+[node name="Platform13" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 702, 126 )
+
+[node name="Platform14" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 720, 126 )
+
+[node name="Platform15" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 738, 126 )
+
+[node name="Platform9" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 648, 126 )
+
+[node name="Platform10" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 666, 126 )
+
+[node name="Platform11" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 630, 126 )
+
+[node name="Platform12" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 612, 126 )
+
+[node name="Platform3" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 558, 126 )
+
+[node name="Platform4" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 540, 126 )
+
+[node name="Platform5" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 522, 126 )
+
+[node name="Platform6" parent="Platforms" instance=ExtResource( 11 )]
+position = Vector2( 504, 126 )
 
 [connection signal="power_off" from="Interactibles/PressurePlate1" to="." method="_on_PressurePlate1_power_off"]
 [connection signal="power_on" from="Interactibles/PressurePlate1" to="." method="_on_PressurePlate1_power_on"]
