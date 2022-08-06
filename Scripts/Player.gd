@@ -175,8 +175,7 @@ func make_player_move_dash():
 		
 	if dash_timer.is_stopped():
 		is_dashing = false
-		if !is_on_floor():
-			apply_gravity()
+		apply_gravity()
 
 func make_player_jump():
 	if is_on_ladder():
