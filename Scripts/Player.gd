@@ -14,6 +14,7 @@ onready var dash_timer = $DashTimer
 
 onready var wall_raycast = $WallRaycast as RayCast2D
 onready var ground_raycast = $GroundRaycast as RayCast2D
+onready var detect_platform = $DetectPlatform as Area2D
 
 #Variables pour stocker l'état du joueur
 enum STATE { IDLE, RUN, JUMP, PUSH, PULL, DASH, CLIMB }
@@ -75,6 +76,7 @@ func _physics_process(delta):
 	make_player_move()
 	make_player_pull_object()
 	make_player_climb_ladder(delta)
+	make_player_passthrough_platform()
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
 
@@ -213,6 +215,13 @@ func make_player_interact():
 			interact_object.switch()
 		elif interact_object is IButton:
 			interact_object.press()
+
+func make_player_passthrough_platform():
+	if ground_raycast.is_colliding() and Input.is_action_pressed(input_move_down):
+		var platforms = detect_platform.get_overlapping_bodies()
+		for platform in platforms:
+			if platform is Platform:
+				platform.passthrough()
 
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
