@@ -17,7 +17,7 @@ onready var ground_raycast = $GroundRaycast as RayCast2D
 onready var detect_platform = $DetectPlatform as Area2D
 
 #Variables pour stocker l'état du joueur
-enum STATE { IDLE, RUN, JUMP, PUSH, PULL, DASH, CLIMB }
+enum STATE { IDLE, RUN, JUMP, PUSH, PULL, DASH }
 var state = STATE.IDLE
 
 #Variable pour stocker les bouttons du joueur, facile à changer pour plus tard
@@ -36,8 +36,6 @@ var dash_count = 0
 var is_dashing = false
 var fast_fall = false
 var pull_object = null
-var nearest_ladder = null
-var ladder_object = null
 var interact_object = null
 
 ####################################################################################################
@@ -52,9 +50,7 @@ func _process(_delta):
 	make_player_interact()
 
 func _state():
-	if is_on_ladder():
-		state = STATE.CLIMB
-	elif pull_object:
+	if pull_object:
 		state = STATE.PULL
 	elif wall_raycast.is_colliding() and player_direction.x != 0:
 		state = STATE.PUSH
@@ -75,7 +71,6 @@ func _physics_process(delta):
 	get_player_direction()
 	make_player_move()
 	make_player_pull_object()
-	make_player_climb_ladder(delta)
 	make_player_passthrough_platform()
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
@@ -87,7 +82,7 @@ func get_player_direction():
 	player_direction.y = Input.get_axis(input_move_up, input_move_down)
 
 func apply_gravity():
-	if is_dashing or is_on_ladder():
+	if is_dashing:
 		player_velocity.y = 0
 	else:
 		player_velocity.y += move_data.GRAVITY;
@@ -118,8 +113,6 @@ func make_player_move_horizontal(direction):
 		apply_friction()
 	#When pressing something, accelerate in the input direction
 	else:
-		if is_on_ladder():
-			ladder_object.leave()
 		apply_acceleration(direction)
 		
 		# on pousse l'objet si on n'est pas sur l'objet lui-même
@@ -137,7 +130,7 @@ func make_player_move_vertical():
 	if Input.is_action_just_pressed(input_jump):
 		jump_buffer.start()
 	
-	if (is_on_floor() and state != STATE.PULL) or (is_on_ladder() and state == STATE.CLIMB):
+	if is_on_floor() and state != STATE.PULL:
 		jump_count = 0
 		coyote_time.start()
 		if !jump_buffer.is_stopped():
@@ -166,7 +159,7 @@ func make_player_move_vertical():
 	has_player_landed()
 
 func make_player_move_dash():
-	if is_on_floor() or is_on_ladder():
+	if is_on_floor():
 		dash_count = 0
 	
 	if Input.is_action_just_pressed(input_move_dash) and dash_count < move_data.MAX_DASH_NUMBER and player_direction != Vector2.ZERO:
@@ -180,25 +173,11 @@ func make_player_move_dash():
 		apply_gravity()
 
 func make_player_jump():
-	if is_on_ladder():
-		leave_ladder()
 	jump_count += 1
 	fast_fall = false
 	player_velocity.y = move_data.JUMP_FORCE
 	jump_buffer.stop()
 	coyote_time.stop()
-
-func make_player_climb_ladder(delta):
-	if is_close_to_ladder():
-		if state != STATE.CLIMB:
-			nearest_ladder.find_closet_point(global_position)
-		
-		if Input.is_action_pressed(input_move_up):
-			ladder_object = nearest_ladder
-			ladder_object.climb(self, move_data.CLIMB_UP_SPEED * delta)
-		elif Input.is_action_pressed(input_move_down):
-			ladder_object = nearest_ladder
-			ladder_object.fall(self, move_data.CLIMB_DOWN_SPEED * delta)
 
 func make_player_pull_object():
 	# action pour permettre de tirer un objet
@@ -243,16 +222,6 @@ func player_facing_direction():
 
 ####################################################################################################
 
-func _on_DetectLadder_area_entered(area):
-	if area is Ladder:
-		nearest_ladder = area
-		nearest_ladder.find_closet_point(global_position)
-
-func _on_DetectLadder_area_exited(area):
-	if area is Ladder:
-		leave_ladder()
-		nearest_ladder = null
-
 func _on_DetectInteract_area_entered(area):
 	if area is Interact:
 		interact_object = area
@@ -262,20 +231,6 @@ func _on_DetectInteract_area_exited(area):
 		interact_object = area
 
 ####################################################################################################
-
-func leave_ladder():
-	if nearest_ladder:
-		nearest_ladder.leave()
-	
-	if ladder_object:
-		ladder_object.leave()
-		ladder_object = null
-
-func is_close_to_ladder():
-	return nearest_ladder != null
-
-func is_on_ladder():
-	return ladder_object != null
 
 func is_on_something():
 	var ground = ground_raycast.get_collider()

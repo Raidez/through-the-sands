@@ -24,11 +24,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/Interact.gd"
 }, {
-"base": "Area2D",
-"class": "Ladder",
-"language": "GDScript",
-"path": "res://Scripts/Ladder.gd"
-}, {
 "base": "Interact",
 "class": "Lever",
 "language": "GDScript",
@@ -93,7 +88,6 @@ _global_script_class_icons={
 "Box": "",
 "IButton": "",
 "Interact": "",
-"Ladder": "",
 "Lever": "",
 "LogContainer": "",
 "Platform": "",

@@ -1,21 +1,15 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Ship.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/TileMap.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scripts/World.gd" type="Script" id=4]
-[ext_resource path="res://Scenes/Ladder.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/Box.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scenes/PressurePlate.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scenes/Lever.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Scenes/Door.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/Platform.tscn" type="PackedScene" id=11]
-
-[sub_resource type="Curve2D" id=1]
-_data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222 )
-}
 
 [node name="World" type="Node2D"]
 script = ExtResource( 4 )
@@ -35,16 +29,6 @@ tile_data = PoolIntArray( 262158, 0, 0, 327683, 0, 0, 327684, 0, 0, 327685, 0, 0
 position = Vector2( 363, 108 )
 
 [node name="Interactibles" type="Node" parent="."]
-
-[node name="Ladder" parent="Interactibles" instance=ExtResource( 5 )]
-position = Vector2( 146, 66 )
-
-[node name="Path2D" parent="Interactibles/Ladder" index="0"]
-curve = SubResource( 1 )
-
-[node name="CollisionShape2D" type="CollisionPolygon2D" parent="Interactibles/Ladder"]
-position = Vector2( -7.5, 65 )
-polygon = PoolVector2Array( 15.5, -70, 17.5, 164, -0.5, 164, 0.5, -70 )
 
 [node name="Box" parent="Interactibles" instance=ExtResource( 6 )]
 position = Vector2( 603, 315 )
@@ -138,5 +122,3 @@ position = Vector2( 504, 126 )
 [connection signal="power_off" from="Interactibles/Lever1" to="." method="_on_Lever1_power_off"]
 [connection signal="power_on" from="Interactibles/Lever1" to="." method="_on_Lever1_power_on"]
 [connection signal="power_on" from="Interactibles/Button1" to="." method="_on_Button1_power_on"]
-
-[editable path="Interactibles/Ladder"]
