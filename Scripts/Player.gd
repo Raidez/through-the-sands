@@ -15,9 +15,10 @@ onready var dash_timer = $DashTimer
 onready var wall_raycast = $WallRaycast as RayCast2D
 onready var ground_raycast = $GroundRaycast as RayCast2D
 onready var detect_platform = $DetectPlatform as Area2D
+onready var detect_ladder = $DetectLadder as Area2D
 
 #Variables pour stocker l'état du joueur
-enum STATE { IDLE, RUN, JUMP, PUSH, PULL, DASH }
+enum STATE { IDLE, RUN, JUMP, PUSH, PULL, DASH, CLIMB }
 var state = STATE.IDLE
 
 #Variable pour stocker les bouttons du joueur, facile à changer pour plus tard
@@ -34,6 +35,7 @@ var player_velocity = Vector2.ZERO
 var jump_count = 0
 var dash_count = 0
 var is_dashing = false
+var is_climbing = false
 var fast_fall = false
 var pull_object = null
 var interact_object = null
@@ -50,7 +52,9 @@ func _process(_delta):
 	make_player_interact()
 
 func _state():
-	if pull_object:
+	if is_on_ladder() and is_climbing:
+		state = STATE.CLIMB
+	elif pull_object:
 		state = STATE.PULL
 	elif wall_raycast.is_colliding() and player_direction.x != 0:
 		state = STATE.PUSH
@@ -72,6 +76,7 @@ func _physics_process(delta):
 	make_player_move()
 	make_player_pull_object()
 	make_player_passthrough_platform()
+	make_player_use_ladder()
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
 
@@ -82,7 +87,7 @@ func get_player_direction():
 	player_direction.y = Input.get_axis(input_move_up, input_move_down)
 
 func apply_gravity():
-	if is_dashing:
+	if is_dashing or is_climbing:
 		player_velocity.y = 0
 	else:
 		player_velocity.y += move_data.GRAVITY;
@@ -202,6 +207,17 @@ func make_player_passthrough_platform():
 			if platform is Platform:
 				platform.passthrough()
 
+func make_player_use_ladder():
+	if is_on_ladder():
+		if Input.is_action_pressed(input_move_up):
+			player_velocity.y = -move_data.CLIMB_UP_SPEED
+			is_climbing = true
+		elif Input.is_action_pressed(input_move_down):
+			player_velocity.y = move_data.CLIMB_DOWN_SPEED
+			is_climbing = true
+	else:
+		is_climbing = false
+
 func has_player_landed():
 	#Contrôle si le joueur a atteint le sol et reset les animations
 	var was_in_air = not is_on_floor()
@@ -231,6 +247,14 @@ func _on_DetectInteract_area_exited(area):
 		interact_object = area
 
 ####################################################################################################
+
+func is_on_ladder():
+	var areas = detect_ladder.get_overlapping_areas()
+	for area in areas:
+		if area.is_in_group("ladder"):
+			return true
+	
+	return false
 
 func is_on_something():
 	var ground = ground_raycast.get_collider()
