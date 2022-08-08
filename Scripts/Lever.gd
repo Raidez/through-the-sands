@@ -1,7 +1,5 @@
 extends Interact
 
-class_name Lever
-
 export(bool) var default_sate = false
 
 onready var animation = $AnimatedSprite as AnimatedSprite

@@ -14,8 +14,9 @@ onready var dash_timer = $DashTimer
 
 onready var wall_raycast = $WallRaycast as RayCast2D
 onready var ground_raycast = $GroundRaycast as RayCast2D
-onready var detect_platform = $DetectPlatform as Area2D
 onready var detect_ladder = $DetectLadder as Area2D
+onready var detect_interact = $DetectInteract as Area2D
+onready var detect_platform = $DetectPlatform as Area2D
 
 #Variables pour stocker l'état du joueur
 enum STATE { IDLE, RUN, JUMP, PUSH, PULL, DASH, CLIMB }
@@ -29,6 +30,7 @@ var input_move_down = "move_down"
 var input_move_dash = "move_dash"
 var input_jump = "move_jump"
 var input_pull_object = "pull_object"
+var input_activate = "activate"
 
 var player_direction = Vector2.ZERO
 var player_velocity = Vector2.ZERO
@@ -48,8 +50,6 @@ func _ready():
 func _process(_delta):
 	_state()
 	_animate()
-	
-	make_player_interact()
 
 func _state():
 	if is_on_ladder() and is_climbing:
@@ -71,12 +71,16 @@ func _animate():
 	
 	player_facing_direction()
 
-func _physics_process(delta):
-	get_player_direction()
+func _make_actions():
 	make_player_move()
 	make_player_pull_object()
 	make_player_passthrough_platform()
 	make_player_use_ladder()
+	make_player_interact()
+
+func _physics_process(delta):
+	get_player_direction()
+	_make_actions()
 	
 	player_velocity = move_and_slide(player_velocity, Vector2.UP)
 
@@ -195,11 +199,8 @@ func make_player_pull_object():
 			pull_object = wall_raycast.get_collider()
 
 func make_player_interact():
-	if interact_object and Input.is_action_just_pressed("activate"):
-		if interact_object is Lever:
-			interact_object.switch()
-		elif interact_object is IButton:
-			interact_object.press()
+	if interact_object != null and Input.is_action_just_pressed(input_activate):
+		interact_object.switch()
 
 func make_player_passthrough_platform():
 	if ground_raycast.is_colliding() and Input.is_action_pressed(input_move_down):

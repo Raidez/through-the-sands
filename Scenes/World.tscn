@@ -28,16 +28,17 @@ position = Vector2( 360, 90 )
 [node name="Interactibles" type="Node" parent="."]
 
 [node name="Box" parent="Interactibles" instance=ExtResource( 6 )]
-position = Vector2( 603, 315 )
+position = Vector2( 594, 306 )
 
 [node name="PressurePlate1" parent="Interactibles" instance=ExtResource( 7 )]
-position = Vector2( 522, 324 )
+position = Vector2( 522, 306 )
 
 [node name="Lever1" parent="Interactibles" instance=ExtResource( 8 )]
-position = Vector2( 378, 324 )
+position = Vector2( 378, 306 )
 
 [node name="Button1" parent="Interactibles" instance=ExtResource( 10 )]
-position = Vector2( 306, 306 )
+position = Vector2( 324, 306 )
+rotation = -3.14159
 direction = 0
 
 [node name="Door1" type="Node2D" parent="Interactibles"]
@@ -138,28 +139,25 @@ position = Vector2( 450, 216 )
 position = Vector2( 450, 198 )
 
 [node name="Ladder8" parent="Ladders" instance=ExtResource( 5 )]
-position = Vector2( 432, 198 )
+position = Vector2( 486, 198 )
 
 [node name="Ladder9" parent="Ladders" instance=ExtResource( 5 )]
-position = Vector2( 414, 198 )
+position = Vector2( 504, 198 )
 
 [node name="Ladder10" parent="Ladders" instance=ExtResource( 5 )]
-position = Vector2( 396, 198 )
-
-[node name="Ladder11" parent="Ladders" instance=ExtResource( 5 )]
-position = Vector2( 396, 180 )
+position = Vector2( 504, 180 )
 
 [node name="Ladder12" parent="Ladders" instance=ExtResource( 5 )]
-position = Vector2( 396, 162 )
+position = Vector2( 504, 162 )
 
 [node name="Ladder13" parent="Ladders" instance=ExtResource( 5 )]
-position = Vector2( 396, 144 )
+position = Vector2( 504, 144 )
 
 [node name="Ladder14" parent="Ladders" instance=ExtResource( 5 )]
-position = Vector2( 396, 126 )
+position = Vector2( 504, 126 )
 
-[node name="Ladder15" parent="Ladders" instance=ExtResource( 5 )]
-position = Vector2( 396, 108 )
+[node name="Ladder11" parent="Ladders" instance=ExtResource( 5 )]
+position = Vector2( 468, 198 )
 
 [connection signal="power_off" from="Interactibles/PressurePlate1" to="." method="_on_PressurePlate1_power_off"]
 [connection signal="power_on" from="Interactibles/PressurePlate1" to="." method="_on_PressurePlate1_power_on"]

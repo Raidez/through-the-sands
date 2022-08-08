@@ -14,20 +14,10 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/Box.gd"
 }, {
-"base": "Interact",
-"class": "IButton",
-"language": "GDScript",
-"path": "res://Scripts/Button.gd"
-}, {
 "base": "Node2D",
 "class": "Interact",
 "language": "GDScript",
 "path": "res://Scripts/Interact.gd"
-}, {
-"base": "Interact",
-"class": "Lever",
-"language": "GDScript",
-"path": "res://Scripts/Lever.gd"
 }, {
 "base": "PanelContainer",
 "class": "LogContainer",
@@ -86,9 +76,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Box": "",
-"IButton": "",
 "Interact": "",
-"Lever": "",
 "LogContainer": "",
 "Platform": "",
 "Player": "",
