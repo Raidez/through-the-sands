@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+class_name Box
+
 #Variable de vitesse horizontale du personnage joueur, modifiable dans l'éditeur
 export(int) var GROUND_FRICTION = 600
 
@@ -7,7 +9,7 @@ export(int) var GROUND_FRICTION = 600
 export(int) var GRAVITY = 5
 export(int) var MAX_FALL_SPEED = 500
 
-var ship_velocity = Vector2.ZERO
+var velocity = Vector2.ZERO
 var trigger_friction = true
 
 func _physics_process(delta):
@@ -16,17 +18,17 @@ func _physics_process(delta):
 	
 	if trigger_friction:
 		apply_friction(delta)
-	ship_velocity = move_and_slide(ship_velocity, Vector2.UP)
+	velocity = move_and_slide(velocity, Vector2.UP)
 
 func apply_friction(delta):
-	ship_velocity.x = move_toward(ship_velocity.x, 0, GROUND_FRICTION * delta)
+	velocity.x = move_toward(velocity.x, 0, GROUND_FRICTION * delta)
 
 func apply_gravity():
-	ship_velocity.y += GRAVITY;
-	ship_velocity.y = min(ship_velocity.y, MAX_FALL_SPEED)
+	velocity.y += GRAVITY;
+	velocity.y = min(velocity.y, MAX_FALL_SPEED)
 
 func slide(vector: Vector2):
-	ship_velocity.x = vector.x
+	velocity.x = vector.x
 	trigger_friction = false
 
 func _on_Timer_timeout():
