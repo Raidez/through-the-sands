@@ -135,7 +135,7 @@ func make_player_move_vertical():
 	if Input.is_action_just_pressed(input_jump):
 		jump_buffer.start()
 	
-	if is_on_floor() and state != STATE.PULL:
+	if (is_on_floor() and state != STATE.PULL) or is_climbing:
 		jump_count = 0
 		coyote_time.start()
 		if !jump_buffer.is_stopped():
@@ -164,7 +164,7 @@ func make_player_move_vertical():
 	has_player_landed()
 
 func make_player_move_dash():
-	if is_on_floor():
+	if is_on_floor() or is_climbing:
 		dash_count = 0
 	
 	if Input.is_action_just_pressed(input_move_dash) and dash_count < move_data.MAX_DASH_NUMBER and player_direction != Vector2.ZERO:
@@ -178,6 +178,7 @@ func make_player_move_dash():
 		apply_gravity()
 
 func make_player_jump():
+	is_climbing = false
 	jump_count += 1
 	fast_fall = false
 	player_velocity.y = move_data.JUMP_FORCE
